@@ -10,7 +10,7 @@ import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.ThemeWallpapers;
 
-public class DataStorage {
+public class DataStorage implements ContractDataStorage {
 
     private List<ThemeWallpapers> themeWallpapers;
 
@@ -158,7 +158,6 @@ public class DataStorage {
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.tools), R.drawable.tools));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.training), R.drawable.training));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.travel), R.drawable.travel));
-        themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.tree), R.drawable.tree));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.trees), R.drawable.trees));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.universe), R.drawable.universe));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.vacation), R.drawable.vacation));
@@ -175,5 +174,10 @@ public class DataStorage {
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.writing), R.drawable.writing));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.yoga), R.drawable.yoga));
         themeWallpapers.add(new ThemeWallpapers(resources.getString(R.string.young), R.drawable.young));
+    }
+
+    @Override
+    public List<ThemeWallpapers> getMainListWallpapers() {
+        return themeWallpapers;
     }
 }

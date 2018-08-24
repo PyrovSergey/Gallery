@@ -5,6 +5,7 @@ import android.content.Context;
 
 public class App extends Application {
     private static App instance;
+    private static AppComponent component;
 
     private Context context;
 
@@ -12,11 +13,16 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        component = DaggerAppComponent.create();
         context = getApplicationContext();
     }
 
     public static App getInstance() {
         return instance;
+    }
+
+    public static AppComponent getComponent() {
+        return component;
     }
 
     public Context getContext() {
