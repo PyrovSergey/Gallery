@@ -1,10 +1,10 @@
 package ru.pyrovsergey.gallery;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +31,18 @@ public class MainFragment extends MvpAppCompatFragment implements MainListView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), 2));
+        recyclerView.setLayoutManager(new GridLayoutManager(recyclerView.getContext(), getScreenOrientation()));
         log(String.valueOf(presenter.getMainListWallpaper().size()));
         recyclerView.setAdapter(new MainFragmentAdapter(presenter.getMainListWallpaper()));
         return recyclerView;
+    }
+
+    private int getScreenOrientation() {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return 2;
+        } else {
+            return 4;
+        }
     }
 
     @Override
