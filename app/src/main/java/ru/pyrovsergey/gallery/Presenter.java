@@ -1,0 +1,31 @@
+package ru.pyrovsergey.gallery;
+
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+
+import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
+import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
+
+@InjectViewState
+public class Presenter extends MvpPresenter<MyContract> implements SearchPhotosCallback {
+    private ContractDataStorage dataStorage;
+
+    public Presenter() {
+        dataStorage = App.getComponent().getDataStorage();
+    }
+
+    public void searchWallpapers(String query) {
+        dataStorage.searchWallpapersOnRequest(query, this);
+    }
+
+    @Override
+    public void onSuccessLoad() {
+        getViewState().startListOfSelectedTopicsFragment();
+    }
+
+    @Override
+    public void onErrorLoad(Throwable error) {
+
+    }
+}

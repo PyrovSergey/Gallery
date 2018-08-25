@@ -1,5 +1,7 @@
 package ru.pyrovsergey.gallery;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,18 +9,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.ui.ListOfSelectedTopicsFragment;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ReplaceFragmentContract {
+public class MainActivity extends MvpAppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener, MyContract {
+    @InjectPresenter
+    Presenter presenter;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -50,7 +60,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -61,6 +73,40 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+        if (null != searchManager) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                presenter.searchWallpapers(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                        getSupportFragmentManager().popBackStack();
+                    }
+                }
+                return false;
+            }
+        });
+
+        searchView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                Toast.makeText(App.getInstance().getContext(), String.valueOf(visibility), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return true;
     }
 
@@ -110,11 +156,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    // мне надо запустить его из ListThemeFragment
     @Override
-    public void replaceFragment() {
-        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, new ListOfSelectedTopicsFragment());
+    public void startListOfSelectedTopicsFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.frame, new ListOfSelectedTopicsFragment());
+        ft.addToBackStack("ListOfSelectedTopics");
         ft.commit();
     }
 }

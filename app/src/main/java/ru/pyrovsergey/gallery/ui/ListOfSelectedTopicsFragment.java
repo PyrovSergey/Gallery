@@ -9,11 +9,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
-import com.arellomobile.mvp.MvpFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
 
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsContract;
@@ -22,10 +21,17 @@ import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsFragmentPresenter;
 public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract {
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        progressBar = view.findViewById(R.id.progress_bar);
     }
 
     @Nullable
@@ -47,7 +53,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     }
 
     @Override
-    public void onClick() {
+    public void showMessage(String message) {
 
     }
 }

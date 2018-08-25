@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.PresenterType;
 
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
@@ -22,7 +21,7 @@ import ru.pyrovsergey.gallery.presenter.ListThemeContract;
 import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
 
 public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener {
-    @InjectPresenter(type = PresenterType.GLOBAL)
+    @InjectPresenter
     ListThemeFragmentPresenter presenter;
 
     @Override
@@ -65,5 +64,4 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     public void onClickListener(String s) {
         presenter.searchWallpapers(s);
     }
-
 }

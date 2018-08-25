@@ -3,11 +3,14 @@ package ru.pyrovsergey.gallery.model.db;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import ru.pyrovsergey.gallery.Presenter;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.PexelsApi;
