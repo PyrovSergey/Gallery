@@ -5,7 +5,7 @@ import java.util.List;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
 
 public interface SearchPhotosCallback {
-    void onSuccessLoad(List<PhotosItem> photos);
+    void onSuccessLoad();
 
     void onErrorLoad(Throwable error);
 }

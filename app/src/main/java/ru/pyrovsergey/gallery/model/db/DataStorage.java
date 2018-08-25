@@ -24,8 +24,8 @@ public class DataStorage implements ContractDataStorage {
 
     public DataStorage() {
         themeWallpapers = new ArrayList<>();
-        photosItems = new ArrayList<>();
         initThemeWallpapersList();
+        photosItems = new ArrayList<>();
         pexelsApi = App.getApi();
     }
 
@@ -201,7 +201,7 @@ public class DataStorage implements ContractDataStorage {
                             photosItems.clear();
                             photosItems = response.body().getPhotos();
                         }
-                        searchPhotosCallback.onSuccessLoad(photosItems);
+                        searchPhotosCallback.onSuccessLoad();
                     }
 
                     @Override
@@ -209,5 +209,10 @@ public class DataStorage implements ContractDataStorage {
                         searchPhotosCallback.onErrorLoad(t);
                     }
                 });
+    }
+
+    @Override
+    public List<PhotosItem> getPhotosItems() {
+        return photosItems;
     }
 }

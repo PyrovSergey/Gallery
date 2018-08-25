@@ -11,13 +11,12 @@ import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
-import ru.pyrovsergey.gallery.model.dto.PhotosItem;
 
 @InjectViewState
-public class MainFragmentPresenter extends MvpPresenter<MainListView> implements SearchPhotosCallback {
+public class ListThemeFragmentPresenter extends MvpPresenter<ListThemeContract> implements SearchPhotosCallback {
     private ContractDataStorage dataStorage;
 
-    public MainFragmentPresenter() {
+    public ListThemeFragmentPresenter() {
         dataStorage = App.getComponent().getDataStorage();
     }
 
@@ -30,14 +29,15 @@ public class MainFragmentPresenter extends MvpPresenter<MainListView> implements
     }
 
     @Override
-    public void onSuccessLoad(List<PhotosItem> photos) {
-        for (PhotosItem item : photos) {
-            Log.i("MyTAG", item.getSrc().getPortrait());
-        }
+    public void onSuccessLoad() {
+        Log.i("MyTAG", "onSuccessLoad");
+        // тут из фрагмента запустим другой фрагмент
+        getViewState().startListOfSelectedTopicsAdapter();
     }
 
     @Override
     public void onErrorLoad(Throwable error) {
         Log.i("MyTAG", error.getMessage());
+        getViewState().onShowMessage(error.getMessage());
     }
 }

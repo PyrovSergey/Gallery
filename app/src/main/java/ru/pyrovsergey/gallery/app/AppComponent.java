@@ -5,13 +5,13 @@ import javax.inject.Singleton;
 import dagger.Component;
 import ru.pyrovsergey.gallery.model.db.DataStorage;
 import ru.pyrovsergey.gallery.model.db.DataStorageModule;
-import ru.pyrovsergey.gallery.presenter.MainFragmentModule;
-import ru.pyrovsergey.gallery.ui.MainFragment;
+import ru.pyrovsergey.gallery.presenter.ListThemeFragmentModule;
+import ru.pyrovsergey.gallery.ui.ListThemeFragment;
 
 @Singleton
-@Component(modules = {DataStorageModule.class, MainFragmentModule.class})
+@Component(modules = {DataStorageModule.class, ListThemeFragmentModule.class})
 public interface AppComponent {
     DataStorage getDataStorage();
 
-    MainFragment getMainFragment();
+    ListThemeFragment getListThemeFragment();
 }

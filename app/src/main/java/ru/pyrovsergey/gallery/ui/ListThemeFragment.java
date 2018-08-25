@@ -4,23 +4,26 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.arellomobile.mvp.presenter.PresenterType;
 
 import ru.pyrovsergey.gallery.R;
-import ru.pyrovsergey.gallery.presenter.MainFragmentPresenter;
-import ru.pyrovsergey.gallery.presenter.MainListView;
+import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.presenter.ListThemeContract;
+import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
 
-public class MainFragment extends MvpAppCompatFragment implements MainListView, FragmentAdapterListener {
+public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener {
     @InjectPresenter(type = PresenterType.GLOBAL)
-    MainFragmentPresenter presenter;
+    ListThemeFragmentPresenter presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +36,7 @@ public class MainFragment extends MvpAppCompatFragment implements MainListView, 
         RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setAdapter(new MainFragmentAdapter(presenter.getMainListWallpaper()));
+        recyclerView.setAdapter(new ListThemeFragmentAdapter(presenter.getMainListWallpaper()));
         return recyclerView;
     }
 
@@ -46,12 +49,21 @@ public class MainFragment extends MvpAppCompatFragment implements MainListView, 
     }
 
     @Override
-    public void onClickItem(String theme) {
+    public void onShowMessage(String message) {
+        Toast.makeText(App.getInstance().getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void startListOfSelectedTopicsAdapter() {
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.add(R.id.frame, new ListOfSelectedTopicsFragment());
+        ft.addToBackStack("ListOfSelectedTopics");
+        ft.commit();
     }
 
     @Override
     public void onClickListener(String s) {
         presenter.searchWallpapers(s);
     }
+
 }

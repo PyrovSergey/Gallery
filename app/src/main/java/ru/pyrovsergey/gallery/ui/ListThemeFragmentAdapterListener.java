@@ -1,5 +1,5 @@
 package ru.pyrovsergey.gallery.ui;
 
-public interface FragmentAdapterListener {
+public interface ListThemeFragmentAdapterListener {
     void onClickListener(String s);
 }

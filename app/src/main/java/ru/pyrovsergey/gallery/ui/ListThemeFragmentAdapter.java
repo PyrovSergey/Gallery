@@ -8,30 +8,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 
-public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapter.ViewHolder> {
+public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFragmentAdapter.ViewHolder> {
     private List<ThemeWallpaper> mainListWallpaper;
-    private FragmentAdapterListener adapterListener;
+    private ListThemeFragmentAdapterListener adapterListener;
 
-    public MainFragmentAdapter(List<ThemeWallpaper> mainListWallpaper) {
+    public ListThemeFragmentAdapter(List<ThemeWallpaper> mainListWallpaper) {
         this.mainListWallpaper = mainListWallpaper;
-        adapterListener = App.getComponent().getMainFragment();
+        adapterListener = App.getComponent().getListThemeFragment();
     }
 
     @NonNull
     @Override
-    public MainFragmentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wallpaper_item, parent, false);
+    public ListThemeFragmentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wallpaper_theme_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MainFragmentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListThemeFragmentAdapter.ViewHolder holder, int position) {
         final ThemeWallpaper wallpaper = mainListWallpaper.get(position);
         holder.imageView.setImageResource(wallpaper.getImage());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -58,8 +60,8 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
-            cardView = view.findViewById(R.id.main_fragment_card_view);
-            imageView = view.findViewById(R.id.main_fragment_image);
+            cardView = view.findViewById(R.id.list_theme_fragment_card_view);
+            imageView = view.findViewById(R.id.list_theme_fragment_image);
             //textView = view.findViewById(R.id.main_fragment_text_view);
         }
     }

@@ -2,6 +2,7 @@ package ru.pyrovsergey.gallery;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,10 +15,10 @@ import android.view.MenuItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.ui.ListOfSelectedTopicsFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, ReplaceFragmentContract {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+
+    private FragmentTransaction transaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +43,9 @@ public class MainActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.frame, App.getComponent().getMainFragment()).commit();
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.frame, (Fragment) App.getComponent().getListThemeFragment()).addToBackStack("ListThemeFragment").commit();
         }
-
     }
 
     @Override
@@ -104,8 +106,15 @@ public class MainActivity extends AppCompatActivity
 //                break;
 
         }
-
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // мне надо запустить его из ListThemeFragment
+    @Override
+    public void replaceFragment() {
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame, new ListOfSelectedTopicsFragment());
+        ft.commit();
     }
 }

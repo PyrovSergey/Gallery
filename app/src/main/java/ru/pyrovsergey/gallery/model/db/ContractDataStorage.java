@@ -10,4 +10,6 @@ public interface ContractDataStorage {
     List<ThemeWallpaper> getMainListWallpapers();
 
     void searchWallpapersOnRequest(String query, SearchPhotosCallback searchPhotosCallback);
+
+    List<PhotosItem> getPhotosItems();
 }
