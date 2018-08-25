@@ -1,11 +1,11 @@
 package ru.pyrovsergey.gallery.model;
 
-public class ThemeWallpapers {
+public class ThemeWallpaper {
     private String title;
 
     private int image;
 
-    public ThemeWallpapers(String title, int image) {
+    public ThemeWallpaper(String title, int image) {
         this.title = title;
         this.image = image;
     }

@@ -2,7 +2,6 @@ package ru.pyrovsergey.gallery;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,6 +13,7 @@ import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ru.pyrovsergey.gallery.app.App;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -41,13 +41,9 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.frame, getFragment()).commit();
+            transaction.add(R.id.frame, App.getComponent().getMainFragment()).commit();
         }
 
-    }
-
-    private Fragment getFragment() {
-        return new MainFragment();
     }
 
     @Override

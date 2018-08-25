@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery;
+package ru.pyrovsergey.gallery.ui;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -7,19 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ru.pyrovsergey.gallery.model.ThemeWallpapers;
+import ru.pyrovsergey.gallery.R;
+import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 
 public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapter.ViewHolder> {
-    private List<ThemeWallpapers> mainListWallpaper;
+    private List<ThemeWallpaper> mainListWallpaper;
+    private FragmentAdapterListener adapterListener;
 
-    public MainFragmentAdapter(List<ThemeWallpapers> mainListWallpaper) {
+    public MainFragmentAdapter(List<ThemeWallpaper> mainListWallpaper) {
         this.mainListWallpaper = mainListWallpaper;
+        adapterListener = App.getComponent().getMainFragment();
     }
 
     @NonNull
@@ -31,9 +32,15 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MainFragmentAdapter.ViewHolder holder, int position) {
-        ThemeWallpapers wallpapers = mainListWallpaper.get(position);
-        holder.imageView.setImageResource(wallpapers.getImage());
-        holder.textView.setText(wallpapers.getTitle());
+        final ThemeWallpaper wallpaper = mainListWallpaper.get(position);
+        holder.imageView.setImageResource(wallpaper.getImage());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapterListener.onClickListener(wallpaper.getTitle());
+            }
+        });
+        //holder.textView.setText(wallpapers.getTitle());
         //Picasso.get().load(wallpapers.getImage()).into(holder.imageView);
     }
 
@@ -46,14 +53,14 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         private View view;
         private CardView cardView;
         private ImageView imageView;
-        private TextView textView;
+        //private TextView textView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             cardView = view.findViewById(R.id.main_fragment_card_view);
             imageView = view.findViewById(R.id.main_fragment_image);
-            textView = view.findViewById(R.id.main_fragment_text_view);
+            //textView = view.findViewById(R.id.main_fragment_text_view);
         }
     }
 }
