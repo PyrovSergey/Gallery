@@ -30,14 +30,11 @@ public class ListThemeFragmentPresenter extends MvpPresenter<ListThemeContract> 
 
     @Override
     public void onSuccessLoad() {
-        Log.i("MyTAG", "onSuccessLoad");
-        // тут из фрагмента запустим другой фрагмент
         getViewState().startListOfSelectedTopicsAdapter();
     }
 
     @Override
     public void onErrorLoad(Throwable error) {
-        Log.i("MyTAG", error.getMessage());
         getViewState().onShowMessage(error.getMessage());
     }
 }

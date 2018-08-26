@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -42,8 +41,6 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
                 adapterListener.onClickListener(wallpaper.getTitle());
             }
         });
-        //holder.textView.setText(wallpapers.getTitle());
-        //Picasso.get().load(wallpapers.getImage()).into(holder.imageView);
     }
 
     @Override
@@ -55,14 +52,12 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
         private View view;
         private CardView cardView;
         private ImageView imageView;
-        //private TextView textView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             cardView = view.findViewById(R.id.list_theme_fragment_card_view);
             imageView = view.findViewById(R.id.list_theme_fragment_image);
-            //textView = view.findViewById(R.id.main_fragment_text_view);
         }
     }
 }

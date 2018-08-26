@@ -46,7 +46,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private int getScreenOrientation() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return 1;
+            return 2;
         } else {
             return 4;
         }

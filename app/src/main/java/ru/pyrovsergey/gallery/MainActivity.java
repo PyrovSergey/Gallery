@@ -135,9 +135,10 @@ public class MainActivity extends MvpAppCompatActivity
 //            case R.id.nav_my_bookmarks:
 //
 //                break;
-//            case R.id.nav_gallery:
-//
-//                break;
+            case R.id.nav_gallery:
+                //getSupportFragmentManager().getBackStackEntryCount() == 1;
+                // getFragmentManager().getBackStackEntryAt(1);
+                break;
 //            case R.id.nav_slideshow:
 //
 //                break;

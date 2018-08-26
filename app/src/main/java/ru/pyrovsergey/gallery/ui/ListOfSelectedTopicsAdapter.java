@@ -16,10 +16,10 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import ru.pyrovsergey.gallery.DetailActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
@@ -43,8 +43,8 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
     @Override
     public void onBindViewHolder(@NonNull final ListOfSelectedTopicsAdapter.ViewHolder holder, int position) {
         final PhotosItem photosItem = photosItems.get(position);
-        //Picasso.get().load(photosItem.getSrc().getPortrait()).into(holder.imageView);
-        Glide.with(context).load(photosItem.getSrc().getPortrait()).thumbnail(0.01f)
+
+        Glide.with(context).load(photosItem.getSrc().getPortrait())
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -58,6 +58,13 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
                     }
                 })
                 .into(holder.imageView);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailActivity.startDetailActivity(photosItem.getSrc().getPortrait(), photosItem.getPhotographer());
+            }
+        });
     }
 
     @Override

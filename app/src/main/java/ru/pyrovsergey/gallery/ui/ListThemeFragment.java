@@ -23,6 +23,7 @@ import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
 public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener {
     @InjectPresenter
     ListThemeFragmentPresenter presenter;
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(new ListThemeFragmentAdapter(presenter.getMainListWallpaper()));
@@ -49,7 +50,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
 
     @Override
     public void onShowMessage(String message) {
-        Toast.makeText(App.getInstance().getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getInstance().getContext(), "ListThemeFragment" + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
