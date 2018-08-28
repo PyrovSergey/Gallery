@@ -41,6 +41,12 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList()));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         return recyclerView;
     }
 
