@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -83,7 +84,7 @@ public class MainActivity extends MvpAppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        final SearchView searchView = (SearchView) searchItem.getActionView();
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         if (null != searchManager) {
@@ -139,10 +140,7 @@ public class MainActivity extends MvpAppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-
-//
 //            case R.id.nav_my_bookmarks:
-//
 //                break;
             case R.id.nav_gallery:
                 if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
@@ -150,28 +148,37 @@ public class MainActivity extends MvpAppCompatActivity
                 }
                 break;
 //            case R.id.nav_slideshow:
-//
 //                break;
 //            case R.id.nav_manage:
-//
 //                break;
 //            case R.id.nav_share:
-//
 //                break;
 //            case R.id.nav_send:
-//
 //                break;
-
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void startListOfSelectedTopicsFragment() {
+    public void startListOfSelectedTopicsFragment(String query) {
+        startListOfSelectedTopicsAdapter(query);
+    }
+
+    private void startListOfSelectedTopicsAdapter(String query) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.frame, new ListOfSelectedTopicsFragment());
+        ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
+        ft.add(R.id.frame, fragment);
         ft.addToBackStack("ListOfSelectedTopics");
         ft.commit();
     }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (view != null && imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }

@@ -19,13 +19,28 @@ import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsContract;
 import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsFragmentPresenter;
 
 public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract {
+    private static final String KEY_QUERY = "ru.pyrovsergey.gallery.ui_key_query";
+
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
     private ProgressBar progressBar;
+    private String query;
+    private RecyclerView recyclerView;
+    private ListOfSelectedTopicsAdapter adapter;
+
+    public static ListOfSelectedTopicsFragment getInstance(String query) {
+        ListOfSelectedTopicsFragment fragment = new ListOfSelectedTopicsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_QUERY, query);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        query = this.getArguments().getString(KEY_QUERY);
+        presenter.searchWallpapers(query);
     }
 
     @Override
@@ -37,10 +52,12 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
+        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL));
-        recyclerView.setAdapter(new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList()));
+        adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
+        recyclerView.setAdapter(adapter);
+        adapter.clear();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -49,6 +66,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         });
         return recyclerView;
     }
+
 
     private int getScreenOrientation() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -59,7 +77,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     }
 
     @Override
-    public void showMessage(String message) {
-
+    public void adapterNotifyDataSetChanged() {
+        adapter.updateDataAdapter(presenter.getPhotosItemList());
     }
 }

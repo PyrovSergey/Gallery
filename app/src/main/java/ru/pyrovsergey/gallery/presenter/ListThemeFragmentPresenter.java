@@ -13,7 +13,7 @@ import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
 
 @InjectViewState
-public class ListThemeFragmentPresenter extends MvpPresenter<ListThemeContract> implements SearchPhotosCallback {
+public class ListThemeFragmentPresenter extends MvpPresenter<ListThemeContract> {
     private ContractDataStorage dataStorage;
 
     public ListThemeFragmentPresenter() {
@@ -22,19 +22,5 @@ public class ListThemeFragmentPresenter extends MvpPresenter<ListThemeContract> 
 
     public List<ThemeWallpaper> getMainListWallpaper() {
         return dataStorage.getMainListWallpapers();
-    }
-
-    public void searchWallpapers(String query) {
-        dataStorage.searchWallpapersOnRequest(query, this);
-    }
-
-    @Override
-    public void onSuccessLoad() {
-        getViewState().startListOfSelectedTopicsAdapter();
-    }
-
-    @Override
-    public void onErrorLoad(Throwable error) {
-        getViewState().onShowMessage(error.getMessage());
     }
 }

@@ -21,6 +21,7 @@ import ru.pyrovsergey.gallery.presenter.ListThemeContract;
 import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
 
 public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener {
+
     @InjectPresenter
     ListThemeFragmentPresenter presenter;
     private RecyclerView recyclerView;
@@ -54,15 +55,15 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     @Override
-    public void startListOfSelectedTopicsAdapter() {
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.frame, new ListOfSelectedTopicsFragment());
-        ft.addToBackStack("ListOfSelectedTopics");
-        ft.commit();
+    public void onClickListener(String query) {
+        startListOfSelectedTopicsAdapter(query);
     }
 
-    @Override
-    public void onClickListener(String s) {
-        presenter.searchWallpapers(s);
+    private void startListOfSelectedTopicsAdapter(String query) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
+        ft.add(R.id.frame, fragment);
+        ft.addToBackStack("ListOfSelectedTopics");
+        ft.commit();
     }
 }

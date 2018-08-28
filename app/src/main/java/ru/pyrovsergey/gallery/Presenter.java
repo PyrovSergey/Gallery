@@ -8,7 +8,7 @@ import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
 
 @InjectViewState
-public class Presenter extends MvpPresenter<MyContract> implements SearchPhotosCallback {
+public class Presenter extends MvpPresenter<MyContract> {
     private ContractDataStorage dataStorage;
 
     public Presenter() {
@@ -16,16 +16,6 @@ public class Presenter extends MvpPresenter<MyContract> implements SearchPhotosC
     }
 
     public void searchWallpapers(String query) {
-        dataStorage.searchWallpapersOnRequest(query, this);
-    }
-
-    @Override
-    public void onSuccessLoad() {
-        getViewState().startListOfSelectedTopicsFragment();
-    }
-
-    @Override
-    public void onErrorLoad(Throwable error) {
-
+        getViewState().startListOfSelectedTopicsFragment(query);
     }
 }

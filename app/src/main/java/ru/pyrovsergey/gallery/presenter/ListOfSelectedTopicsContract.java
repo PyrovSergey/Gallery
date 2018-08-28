@@ -6,5 +6,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface ListOfSelectedTopicsContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void showMessage(String message);
+    void adapterNotifyDataSetChanged();
 }

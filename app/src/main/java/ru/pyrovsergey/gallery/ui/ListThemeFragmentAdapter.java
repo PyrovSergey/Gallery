@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
+import android.widget.ProgressBar;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListThemeFragmentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ListThemeFragmentAdapter.ViewHolder holder, int position) {
         final ThemeWallpaper wallpaper = mainListWallpaper.get(position);
         holder.imageView.setImageResource(wallpaper.getImage());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -52,12 +52,15 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
         private View view;
         private CardView cardView;
         private ImageView imageView;
+        private ProgressBar progressBar;
 
         public ViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             cardView = view.findViewById(R.id.list_theme_fragment_card_view);
             imageView = view.findViewById(R.id.list_theme_fragment_image);
+            progressBar = view.findViewById(R.id.list_theme_progress_bar);
+
         }
     }
 }

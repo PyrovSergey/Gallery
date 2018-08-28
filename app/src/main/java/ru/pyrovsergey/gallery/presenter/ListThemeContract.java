@@ -8,6 +8,4 @@ public interface ListThemeContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void onShowMessage(String message);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
-    void startListOfSelectedTopicsAdapter();
 }

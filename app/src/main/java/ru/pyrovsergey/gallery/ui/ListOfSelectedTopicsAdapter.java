@@ -72,6 +72,10 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
         return photosItems.size();
     }
 
+    public void clear() {
+        photosItems.clear();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private View view;
         private ImageView imageView;
@@ -83,5 +87,10 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
             imageView = view.findViewById(R.id.list_of_selected_topics_fragment_image);
             progressBar = view.findViewById(R.id.progress_bar);
         }
+    }
+
+    public void updateDataAdapter(List<PhotosItem> list) {
+        photosItems.addAll(list);
+        notifyDataSetChanged();
     }
 }
