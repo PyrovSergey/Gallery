@@ -105,27 +105,28 @@
                     android:id="@+id/button_share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:layout_marginRight="8dp"
                     android:padding="8dp"
-                    android:layout_gravity="top"
-                    android:src="@drawable/share"/>
+                    android:src="@drawable/share" />
 
                 <ImageView
                     android:id="@+id/button_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="top"
                     android:layout_marginRight="8dp"
                     android:padding="8dp"
-                    android:layout_gravity="top"
-                    android:src="@drawable/download"/>
+                    android:src="@drawable/download" />
 
                 <ImageView
                     android:id="@+id/button_full_screen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="8dp"
                     android:layout_gravity="top"
-                    android:src="@drawable/full_screen"/>
+                    android:layout_marginRight="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/full_screen" />
 
 
             </LinearLayout>
