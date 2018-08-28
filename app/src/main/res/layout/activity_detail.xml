@@ -126,13 +126,9 @@
                     android:layout_gravity="top"
                     android:layout_marginRight="8dp"
                     android:padding="8dp"
-                    android:src="@drawable/full_screen" />
-
+                    android:src="@drawable/fullscreen" />
 
             </LinearLayout>
-
-
         </LinearLayout>
     </FrameLayout>
-
 </FrameLayout>
