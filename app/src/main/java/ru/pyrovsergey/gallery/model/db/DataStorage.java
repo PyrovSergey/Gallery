@@ -195,8 +195,8 @@ public class DataStorage implements ContractDataStorage {
     }
 
     @Override
-    public void searchWallpapersOnRequest(String query, final SearchPhotosCallback searchPhotosCallback) {
-        pexelsApi.searchPhoto(query, 40, 1)
+    public void searchWallpapersOnRequest(String query, final SearchPhotosCallback searchPhotosCallback, int numPage) {
+        pexelsApi.searchPhoto(query, 40, numPage)
                 .enqueue(new Callback<Response>() {
                     @Override
                     public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {

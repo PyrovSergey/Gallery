@@ -60,7 +60,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     private void startListOfSelectedTopicsAdapter(String query) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.add(R.id.frame, fragment);
         ft.addToBackStack("ListOfSelectedTopics");

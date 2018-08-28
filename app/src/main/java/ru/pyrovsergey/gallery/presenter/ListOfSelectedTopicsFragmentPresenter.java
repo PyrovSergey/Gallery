@@ -19,8 +19,8 @@ public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSe
         dataStorage = App.getComponent().getDataStorage();
     }
 
-    public void searchWallpapers(String query) {
-        dataStorage.searchWallpapersOnRequest(query, this);
+    public void searchWallpapers(String query, int numberPage) {
+        dataStorage.searchWallpapersOnRequest(query, this, numberPage);
     }
 
     public List<PhotosItem> getPhotosItemList() {
@@ -34,6 +34,6 @@ public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSe
 
     @Override
     public void onErrorLoad(Throwable error) {
-
+        getViewState().onErrorLoadOfLastPage();
     }
 }
