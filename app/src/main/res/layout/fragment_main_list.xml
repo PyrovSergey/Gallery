@@ -5,6 +5,7 @@
     android:id="@+id/main_list_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:scrollbars="vertical"
     tools:listitem="@layout/wallpaper_theme_item">
 

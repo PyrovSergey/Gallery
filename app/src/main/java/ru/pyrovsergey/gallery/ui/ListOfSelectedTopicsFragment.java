@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,15 +26,16 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
-    private ProgressBar progressBar;
+    private ProgressBar firstStartProgressBar;
+    private ProgressBar paginationProgressBar;
     private String query;
     private RecyclerView recyclerView;
     private ListOfSelectedTopicsAdapter adapter;
-    //private StaggeredGridLayoutManager layoutManager;
     private GridLayoutManager layoutManager;
     private Boolean loading = false;
     private int pageCount = 1;
     private boolean isLastPage = false;
+    private static boolean isFirstStart = true;
 
     public static ListOfSelectedTopicsFragment getInstance(String query) {
         ListOfSelectedTopicsFragment fragment = new ListOfSelectedTopicsFragment();
@@ -48,21 +50,21 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         super.onCreate(savedInstanceState);
         query = this.getArguments().getString(KEY_QUERY);
         presenter.searchWallpapers(query, pageCount++);
-//        loading = true;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        progressBar = view.findViewById(R.id.progress_bar);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_choice_list, container, false);
+        firstStartProgressBar = view.findViewById(R.id.choice_list_first_start_progress_bar);
+        paginationProgressBar = view.findViewById(R.id.choice_list_pagination_progress_bar);
+        recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
-        //layoutManager = new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL);
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), getScreenOrientation());
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
@@ -74,13 +76,14 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition == adapter.getItemCount() - 1) {
                     if (!loading && !isLastPage) {
+                        showProgressBar();
                         loading = true;
                         presenter.searchWallpapers(query, pageCount++);
                     }
                 }
             }
         });
-        return recyclerView;
+        return view;
     }
 
     private int getScreenOrientation() {
@@ -93,13 +96,38 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     @Override
     public void adapterNotifyDataSetChanged() {
+        hideProgressBar();
+        isFirstStart = false;
         loading = false;
-        Toast.makeText(App.getInstance().getContext(), "Number of page " + String.valueOf(pageCount), Toast.LENGTH_SHORT).show();
         adapter.updateDataAdapter(presenter.getPhotosItemList());
     }
 
     @Override
     public void onErrorLoadOfLastPage() {
+        hideProgressBar();
         isLastPage = true;
+    }
+
+    private void showProgressBar() {
+        if (isFirstStart) {
+            firstStartProgressBar.setVisibility(View.VISIBLE);
+            paginationProgressBar.setVisibility(View.INVISIBLE);
+        } else {
+            paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.66f));
+            paginationProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgressBar() {
+        if (isFirstStart) {
+            firstStartProgressBar.setVisibility(View.INVISIBLE);
+            paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
+            paginationProgressBar.setVisibility(View.INVISIBLE);
+            isFirstStart = false;
+        } else {
+            paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
+            paginationProgressBar.setVisibility(View.INVISIBLE);
+            firstStartProgressBar.setVisibility(View.INVISIBLE);
+        }
     }
 }

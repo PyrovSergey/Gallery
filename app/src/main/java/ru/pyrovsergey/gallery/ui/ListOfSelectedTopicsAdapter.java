@@ -53,7 +53,7 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        holder.progressBar.setVisibility(View.INVISIBLE);
+                        //holder.progressBar.setVisibility(View.INVISIBLE);
                         return false;
                     }
                 })
@@ -90,7 +90,9 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
     }
 
     public void updateDataAdapter(List<PhotosItem> list) {
+        int startPosition = photosItems.size();
+        int lastPosition = list.size();
         photosItems.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(startPosition, startPosition + lastPosition);
     }
 }
