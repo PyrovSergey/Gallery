@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import java.util.Objects;
+
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.presenter.ListThemeContract;
@@ -60,10 +62,17 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     private void startListOfSelectedTopicsAdapter(String query) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = null;
+        try {
+            ft = getActivity().getSupportFragmentManager().beginTransaction();
+        } catch (NullPointerException e) {
+            // TO_DO
+        }
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.add(R.id.frame, fragment);
-        ft.addToBackStack("ListOfSelectedTopics");
-        ft.commit();
+        if (ft != null) {
+            ft.add(R.id.frame, fragment);
+            ft.addToBackStack("ListOfSelectedTopics");
+            ft.commit();
+        }
     }
 }

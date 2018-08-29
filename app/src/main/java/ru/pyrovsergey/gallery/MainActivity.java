@@ -1,7 +1,9 @@
 package ru.pyrovsergey.gallery;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -140,8 +142,9 @@ public class MainActivity extends MvpAppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-//            case R.id.nav_my_bookmarks:
-//                break;
+            case R.id.nav_about_gallery:
+                showAboutMessage();
+                break;
             case R.id.nav_gallery:
                 if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
                     getSupportFragmentManager().popBackStack();
@@ -158,6 +161,31 @@ public class MainActivity extends MvpAppCompatActivity
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void showAboutMessage() {
+        AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
+            builder.setView(R.layout.dialog_alert_message)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .show();
+        } else {
+            builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.app_name)
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setMessage(R.string.about_text)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override

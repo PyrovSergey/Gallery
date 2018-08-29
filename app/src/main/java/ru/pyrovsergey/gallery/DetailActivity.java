@@ -195,14 +195,14 @@ public class DetailActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.alert_message_install_this_wallpaper)
                 .setCancelable(false)
-                .setPositiveButton(getString(R.string.alert_message_ok),
+                .setPositiveButton(android.R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                                 setWallpaper();
                             }
                         })
-                .setNegativeButton(getString(R.string.alert_message_cancel),
+                .setNegativeButton(android.R.string.no,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
