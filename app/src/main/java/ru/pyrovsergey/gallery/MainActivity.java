@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -44,6 +45,8 @@ public class MainActivity extends MvpAppCompatActivity
     DrawerLayout drawer;
 
     private FragmentTransaction transaction;
+    private SharedPreferences.Editor editor;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class MainActivity extends MvpAppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        preferences = getPreferences(MODE_PRIVATE);
+        editor = preferences.edit();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance
@@ -128,11 +133,26 @@ public class MainActivity extends MvpAppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings_two_line) {
+            //Toast.makeText(this, "action_settings_two_line", Toast.LENGTH_SHORT).show();
+            editor.putInt("setting_gallery_layout", 2);
+            editor.apply();
             return true;
         }
+        if (id == R.id.action_settings_three_line) {
+            //Toast.makeText(this, "action_settings_three_line", Toast.LENGTH_SHORT).show();
+            editor.putInt("setting_gallery_layout", 3);
+            editor.apply();
+            return true;
+        }
+
+        if (id == R.id.action_settings_four_line) {
+            //Toast.makeText(this, "action_settings_four_line", Toast.LENGTH_SHORT).show();
+            editor.putInt("setting_gallery_layout", 4);
+            editor.apply();
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -170,7 +190,7 @@ public class MainActivity extends MvpAppCompatActivity
             builder.setView(R.layout.dialog_alert_message)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
+                            // continue to do
                         }
                     })
                     .show();
@@ -181,7 +201,7 @@ public class MainActivity extends MvpAppCompatActivity
                     .setMessage(R.string.about_text)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // continue with delete
+                            // continue to do
                         }
                     })
                     .show();
@@ -194,11 +214,11 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     private void startListOfSelectedTopicsAdapter(String query) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.add(R.id.frame, fragment);
-        ft.addToBackStack("ListOfSelectedTopics");
-        ft.commit();
+        transaction.add(R.id.frame, fragment);
+        transaction.addToBackStack("ListOfSelectedTopics");
+        transaction.commit();
     }
 
     private void hideKeyboard() {

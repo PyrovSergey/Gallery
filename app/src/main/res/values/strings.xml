@@ -165,6 +165,6 @@
     <string name="alert_message_ok">OK</string>
 
     <string name="alert_message_install_this_wallpaper">Install this wallpaper?</string>
-    <string name="about_text">This application was created for my portfolio. App shows photos from <a href="https://www.pexels.com/">pexels.com</a> - free stock photos resource. You can receive images from a PEXELES resource. It is possible to set images as wallpaper or download them to the phone\'s internal memory.\n\nTo see the source code for this app, please visit the <a href="https://github.com/PyrovSergey/Gallery/">my githup repo</a>.</string>
+    <string name="about_text">This application was created for my portfolio. App shows photos from <a href="https://www.pexels.com/">pexels.com</a> - free stock photos resource. You can receive images from a PEXELS resource. It is possible to set images as wallpaper or download them to the phone\'s internal memory.\n\nTo see the source code for this app, please visit the <a href="https://github.com/PyrovSergey/Gallery/">my githup repo</a>.</string>
 
 </resources>
