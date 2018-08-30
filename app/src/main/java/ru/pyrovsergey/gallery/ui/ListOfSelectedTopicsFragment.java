@@ -25,7 +25,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
-    private ProgressBar firstStartProgressBar;
     private ProgressBar paginationProgressBar;
     private String query;
     private RecyclerView recyclerView;
@@ -60,7 +59,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_list, container, false);
-        firstStartProgressBar = view.findViewById(R.id.choice_list_first_start_progress_bar);
         paginationProgressBar = view.findViewById(R.id.choice_list_pagination_progress_bar);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -72,8 +70,8 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                if (lastVisibleItemPosition == adapter.getItemCount() - 1) {
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition() - 6;
+                if (lastVisibleItemPosition == adapter.getItemCount() - 7) {
                     if (!loading && !isLastPage) {
                         showProgressBar();
                         loading = true;
@@ -109,7 +107,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private void showProgressBar() {
         if (isFirstStart) {
-            firstStartProgressBar.setVisibility(View.VISIBLE);
             paginationProgressBar.setVisibility(View.INVISIBLE);
         } else {
             paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0.66f));
@@ -119,14 +116,12 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private void hideProgressBar() {
         if (isFirstStart) {
-            firstStartProgressBar.setVisibility(View.INVISIBLE);
             paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
             paginationProgressBar.setVisibility(View.INVISIBLE);
             isFirstStart = false;
         } else {
             paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
             paginationProgressBar.setVisibility(View.INVISIBLE);
-            firstStartProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 }

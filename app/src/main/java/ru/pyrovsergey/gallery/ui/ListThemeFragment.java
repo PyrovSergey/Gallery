@@ -84,8 +84,6 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         uploadAdapterAndLayoutManager();
-//        Toast.makeText(App.getInstance().getContext(), "Success", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(App.getInstance().getContext(), "In ListThemeFragment - " + sharedPreferences.getInt(key, 0), Toast.LENGTH_SHORT).show();
     }
 
     private void uploadAdapterAndLayoutManager() {

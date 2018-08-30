@@ -214,11 +214,11 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     private void startListOfSelectedTopicsAdapter(String query) {
-        // FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        transaction.add(R.id.frame, fragment);
-        transaction.addToBackStack("ListOfSelectedTopics");
-        transaction.commit();
+        ft.add(R.id.frame, fragment);
+        ft.addToBackStack("ListOfSelectedTopics");
+        ft.commit();
     }
 
     private void hideKeyboard() {
