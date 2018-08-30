@@ -17,6 +17,13 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/wallpaper_photo_item" />
 
+        <ProgressBar
+            android:id="@+id/choice_list_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
     </RelativeLayout>
 
     <ProgressBar

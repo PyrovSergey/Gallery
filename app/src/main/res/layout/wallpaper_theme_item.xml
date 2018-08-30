@@ -26,6 +26,7 @@
         android:layout_gravity="bottom"
         android:background="@color/black_overlay"
         android:gravity="center"
+        android:singleLine="true"
         android:paddingRight="4dp"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"

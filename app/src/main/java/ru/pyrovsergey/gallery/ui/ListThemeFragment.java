@@ -50,7 +50,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
 
     private int getScreenOrientation() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return preferences.getInt("setting_gallery_layout", 1);
+            return preferences.getInt("setting_gallery_layout", 2);
         } else {
             return 4;
         }

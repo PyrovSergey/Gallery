@@ -1,5 +1,7 @@
 package ru.pyrovsergey.gallery.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,16 +22,18 @@ import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsContract;
 import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsFragmentPresenter;
 
-public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract {
+public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_QUERY = "ru.pyrovsergey.gallery.ui_key_query";
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
     private ProgressBar paginationProgressBar;
+    private ProgressBar progressBar;
     private String query;
     private RecyclerView recyclerView;
     private ListOfSelectedTopicsAdapter adapter;
     private GridLayoutManager layoutManager;
+    private SharedPreferences preferences;
     private Boolean loading = false;
     private int pageCount = 1;
     private boolean isLastPage = false;
@@ -60,6 +64,10 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choice_list, container, false);
         paginationProgressBar = view.findViewById(R.id.choice_list_pagination_progress_bar);
+        progressBar = view.findViewById(R.id.choice_list_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+        preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        preferences.registerOnSharedPreferenceChangeListener(this);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), getScreenOrientation());
@@ -85,7 +93,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private int getScreenOrientation() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return 2;
+            return preferences.getInt("setting_gallery_layout", 2);
         } else {
             return 4;
         }
@@ -116,12 +124,25 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private void hideProgressBar() {
         if (isFirstStart) {
+            progressBar.setVisibility(View.INVISIBLE);
             paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
             paginationProgressBar.setVisibility(View.INVISIBLE);
             isFirstStart = false;
         } else {
+            progressBar.setVisibility(View.INVISIBLE);
             paginationProgressBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 0f));
             paginationProgressBar.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        uploadAdapterAndLayoutManager();
+    }
+
+    private void uploadAdapterAndLayoutManager() {
+        layoutManager = new GridLayoutManager(App.getInstance().getContext(), getScreenOrientation());
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
     }
 }
