@@ -44,7 +44,17 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
+import ru.pyrovsergey.gallery.model.db.AppGalleryDatabase;
+import ru.pyrovsergey.gallery.model.db.FavoriteWallpaperDao;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -53,14 +63,22 @@ public class DetailActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private static final String DATE_FORMAT = "ddMMyyyy_HHmmss";
     private static final String SHARE_TYPE = "text/html";
-    public static final String KEY = "ru_pyrovsergey_gallery_key";
-    public static final String AUTHOR = "ru_pyrovsergey_gallery_author";
+    public static final String KEY_FAVORITE_WALLPAPER_OBJECT = "ru.pyrovsergey.gallery_key_favorite_wallpaper_object";
     private final Handler mHideHandler = new Handler();
-    private String url;
+    private FavoriteWallpaperDao favoriteWallpaperDao;
+    private FavoriteWallpaper favoriteWallpaper;
     private Toast toast;
+    private boolean isInBookmarks;
 
+
+    @BindView(R.id.button_bookmark)
+    ImageView buttonBookmark;
     @BindView(R.id.button_share)
     ImageView buttonShare;
+    @BindView(R.id.button_download)
+    ImageView buttonDownload;
+    @BindView(R.id.button_full_screen)
+    ImageView buttonFullScreen;
     @BindView(R.id.detail_image)
     ImageView detailImage;
     @BindView(R.id.button_back)
@@ -71,14 +89,10 @@ public class DetailActivity extends AppCompatActivity {
     TextView authorTextView;
     @BindView(R.id.button_set_as_wallpaper)
     TextView buttonSetAsWallpaper;
-    @BindView(R.id.button_full_screen)
-    ImageView buttonFullScreen;
     @BindView(R.id.upper_linear_layout)
     View upperLinearLayout;
     @BindView(R.id.bottom_linear_layout)
     View bottomLinearLayout;
-    @BindView(R.id.button_download)
-    ImageView buttonDownload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +100,8 @@ public class DetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+        AppGalleryDatabase database = App.getDatabase();
+        favoriteWallpaperDao = database.favoriteWallpaperDao();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -93,15 +109,15 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         mVisible = true;
-
-        url = getIntent().getStringExtra(KEY);
-        String author = getIntent().getStringExtra(AUTHOR);
-        if (TextUtils.isEmpty(author)) {
+        Intent intent = getIntent();
+        favoriteWallpaper = intent.getParcelableExtra(KEY_FAVORITE_WALLPAPER_OBJECT);
+        isAddedToBookmarks(favoriteWallpaper.getId());
+        if (TextUtils.isEmpty(favoriteWallpaper.getAuthor())) {
             titleAuthorTextView.setVisibility(View.INVISIBLE);
         } else {
-            authorTextView.setText(author);
+            authorTextView.setText(favoriteWallpaper.getAuthor());
         }
-        Glide.with(this).load(url).into(detailImage);
+        Glide.with(this).load(favoriteWallpaper.getUrl()).into(detailImage);
     }
 
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -142,12 +158,11 @@ public class DetailActivity extends AppCompatActivity {
         }
     };
 
-    public static void startDetailActivity(String url, String author) {
+    public static void startDetailActivity(FavoriteWallpaper favoriteWallpaper) {
         Context context = App.getInstance().getContext();
         Intent intent = new Intent(context, DetailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY, url);
-        intent.putExtra(AUTHOR, author);
+        intent.putExtra(KEY_FAVORITE_WALLPAPER_OBJECT, favoriteWallpaper);
         context.startActivity(intent);
     }
 
@@ -245,7 +260,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image,
-            R.id.button_full_screen, R.id.button_download, R.id.button_share})
+            R.id.button_full_screen, R.id.button_download, R.id.button_share, R.id.button_bookmark})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button_back:
@@ -268,8 +283,88 @@ public class DetailActivity extends AppCompatActivity {
             case R.id.button_share:
                 share();
                 break;
+            case R.id.button_bookmark:
+                addOrRemoveBookmark(favoriteWallpaper);
+                break;
         }
+    }
 
+    private void addOrRemoveBookmark(FavoriteWallpaper favorite) {
+        if (!isInBookmarks) {
+            insert(favorite);
+        } else {
+            delete(favorite);
+        }
+    }
+
+    private void delete(final FavoriteWallpaper favorite) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.delete(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        isInBookmarks = false;
+                        buttonBookmark.setImageResource(R.drawable.bookmark_border);
+                        makeToast("Wallpaper delete in bookmarks");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private void insert(final FavoriteWallpaper favorite) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.insert(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        isInBookmarks = true;
+                        buttonBookmark.setImageResource(R.drawable.bookmark);
+                        makeToast("Wallpaper add to bookmarks");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    private void isAddedToBookmarks(final int id) {
+        favoriteWallpaperDao.getById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FavoriteWallpaper>() {
+                    @Override
+                    public void accept(FavoriteWallpaper favorite) throws Exception {
+                        buttonBookmark.setImageResource(R.drawable.bookmark);
+                        isInBookmarks = true;
+                    }
+                });
     }
 
     private void checkStoragePermissionGrantedAndDownload() {
@@ -344,7 +439,7 @@ public class DetailActivity extends AppCompatActivity {
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType(SHARE_TYPE);
         intentShare.putExtra(Intent.EXTRA_TEXT,
-                getString(R.string.photos_provided_by_pexels) + url);
+                getString(R.string.photos_provided_by_pexels) + favoriteWallpaper.getUrl());
         Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
         if (intentShare.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
@@ -357,5 +452,11 @@ public class DetailActivity extends AppCompatActivity {
         if (toast != null) {
             toast.cancel();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

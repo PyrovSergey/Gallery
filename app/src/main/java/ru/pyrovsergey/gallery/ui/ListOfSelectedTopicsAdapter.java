@@ -17,6 +17,7 @@ import java.util.List;
 import ru.pyrovsergey.gallery.DetailActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
 
 class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTopicsAdapter.ViewHolder> {
@@ -42,7 +43,11 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailActivity.startDetailActivity(photosItem.getSrc().getPortrait(), photosItem.getPhotographer());
+                FavoriteWallpaper favoriteWallpaper = new FavoriteWallpaper();
+                favoriteWallpaper.setId(photosItem.getId());
+                favoriteWallpaper.setUrl(photosItem.getSrc().getPortrait());
+                favoriteWallpaper.setAuthor(photosItem.getPhotographer());
+                DetailActivity.startDetailActivity(favoriteWallpaper);
             }
         });
         setLeftAnimation(holder.cardView);

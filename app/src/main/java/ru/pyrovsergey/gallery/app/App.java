@@ -1,19 +1,22 @@
 package ru.pyrovsergey.gallery.app;
 
 import android.app.Application;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+
 import java.io.IOException;
 
+import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.pyrovsergey.gallery.model.PexelsApi;
+import ru.pyrovsergey.gallery.model.db.AppGalleryDatabase;
 
 public class App extends Application {
     private static App instance;
@@ -23,7 +26,7 @@ public class App extends Application {
     private static PexelsApi api;
     private final static String BASE_URL = "https://api.pexels.com";
     private final static String KEY = "";
-
+    private static AppGalleryDatabase database;
     private Context context;
 
     @Override
@@ -33,6 +36,7 @@ public class App extends Application {
         instance = this;
         component = DaggerAppComponent.create();
         context = getApplicationContext();
+        database = Room.databaseBuilder(context, AppGalleryDatabase.class, "database").build();
         okHttpClient = getOkHttpClient();
         retrofit = getRetrofitClient(BASE_URL, okHttpClient);
         api = retrofit.create(PexelsApi.class);
@@ -79,5 +83,9 @@ public class App extends Application {
 
     public static PexelsApi getApi() {
         return api;
+    }
+
+    public static AppGalleryDatabase getDatabase() {
+        return database;
     }
 }
