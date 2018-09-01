@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,20 +16,16 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,16 +34,15 @@ import ru.pyrovsergey.gallery.ui.ListOfSelectedTopicsFragment;
 
 public class MainActivity extends MvpAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyContract {
+    public static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
     @InjectPresenter
     Presenter presenter;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-
     private FragmentTransaction transaction;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
@@ -76,14 +70,14 @@ public class MainActivity extends MvpAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
             transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.frame, (Fragment) App.getComponent().getListThemeFragment()).addToBackStack("ListThemeFragment").commit();
+            transaction.add(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
+        if (getSupportFragmentManager().findFragmentByTag("ListOfSelectedTopics") != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
         } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -139,21 +133,18 @@ public class MainActivity extends MvpAppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings_two_line) {
-            //Toast.makeText(this, "action_settings_two_line", Toast.LENGTH_SHORT).show();
-            editor.putInt("setting_gallery_layout", 2);
+            editor.putInt(SETTING_GALLERY_LAYOUT, 2);
             editor.apply();
             return true;
         }
         if (id == R.id.action_settings_three_line) {
-            //Toast.makeText(this, "action_settings_three_line", Toast.LENGTH_SHORT).show();
-            editor.putInt("setting_gallery_layout", 3);
+            editor.putInt(SETTING_GALLERY_LAYOUT, 3);
             editor.apply();
             return true;
         }
 
         if (id == R.id.action_settings_four_line) {
-            //Toast.makeText(this, "action_settings_four_line", Toast.LENGTH_SHORT).show();
-            editor.putInt("setting_gallery_layout", 4);
+            editor.putInt(SETTING_GALLERY_LAYOUT, 4);
             editor.apply();
             return true;
         }
@@ -167,21 +158,15 @@ public class MainActivity extends MvpAppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.nav_about_gallery:
-                showAboutMessage();
-                break;
             case R.id.nav_gallery:
                 if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
                     getSupportFragmentManager().popBackStack();
                 }
                 break;
+            case R.id.nav_about_gallery:
+                presenter.callAboutGallery();
+                break;
 //            case R.id.nav_slideshow:
-//                break;
-//            case R.id.nav_manage:
-//                break;
-//            case R.id.nav_share:
-//                break;
-//            case R.id.nav_send:
 //                break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -201,7 +186,6 @@ public class MainActivity extends MvpAppCompatActivity
                         }
                     })
                     .show();
-            //((TextView)builder.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.app_name)
@@ -221,20 +205,15 @@ public class MainActivity extends MvpAppCompatActivity
         startListOfSelectedTopicsAdapter(query);
     }
 
+    @Override
+    public void showAboutGalleryMessage() {
+        showAboutMessage();
+    }
+
     private void startListOfSelectedTopicsAdapter(String query) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.add(R.id.frame, fragment);
-        ft.addToBackStack("ListOfSelectedTopics");
-        ft.commit();
+        ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
+        ft.commitAllowingStateLoss();
     }
-//
-//    private void hideKeyboard() {
-//        View view = this.getCurrentFocus();
-//        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-//        if (view != null && imm != null) {
-//            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-//        }
-//    }
-
 }

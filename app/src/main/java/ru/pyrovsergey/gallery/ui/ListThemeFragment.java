@@ -2,7 +2,6 @@ package ru.pyrovsergey.gallery.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,23 +16,33 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import ru.pyrovsergey.gallery.MainActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.presenter.ListThemeContract;
 import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
 
+
 public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    public static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
     @InjectPresenter
     ListThemeFragmentPresenter presenter;
     private RecyclerView recyclerView;
     private SharedPreferences preferences;
     private ListThemeFragmentAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
+    private MainActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (MainActivity) context;
     }
 
     @Nullable
@@ -58,12 +67,12 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
         startListOfSelectedTopicsAdapter(query);
     }
 
+
     private void startListOfSelectedTopicsAdapter(String query) {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.add(R.id.frame, fragment);
-        ft.addToBackStack("ListOfSelectedTopics");
-        ft.commit();
+        ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
+        ft.commitAllowingStateLoss();
     }
 
     @Override
@@ -72,7 +81,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     private void uploadAdapterAndLayoutManager() {
-        layoutManager = new StaggeredGridLayoutManager(preferences.getInt("setting_gallery_layout", 2), StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(preferences.getInt(SETTING_GALLERY_LAYOUT, 2), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListThemeFragmentAdapter(presenter.getMainListWallpaper());
     }

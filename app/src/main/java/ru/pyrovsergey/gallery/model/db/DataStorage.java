@@ -3,14 +3,11 @@ package ru.pyrovsergey.gallery.model.db;
 import android.content.Context;
 import android.content.res.Resources;
 
-import com.arellomobile.mvp.presenter.InjectPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import ru.pyrovsergey.gallery.Presenter;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.PexelsApi;
@@ -21,6 +18,7 @@ import ru.pyrovsergey.gallery.model.dto.Response;
 
 public class DataStorage implements ContractDataStorage {
 
+    private static final int PER_PAGE = 40;
     private List<ThemeWallpaper> themeWallpapers;
     private final PexelsApi pexelsApi;
     private List<PhotosItem> photosItems;
@@ -196,7 +194,7 @@ public class DataStorage implements ContractDataStorage {
 
     @Override
     public void searchWallpapersOnRequest(String query, final SearchPhotosCallback searchPhotosCallback, int numPage) {
-        pexelsApi.searchPhoto(query, 40, numPage)
+        pexelsApi.searchPhoto(query, PER_PAGE, numPage)
                 .enqueue(new Callback<Response>() {
                     @Override
                     public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {

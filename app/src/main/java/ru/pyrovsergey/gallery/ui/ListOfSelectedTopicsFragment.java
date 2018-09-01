@@ -2,11 +2,9 @@ package ru.pyrovsergey.gallery.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +23,7 @@ import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsFragmentPresenter;
 
 public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_QUERY = "ru.pyrovsergey.gallery.ui_key_query";
+    private static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
@@ -71,7 +70,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         preferences.registerOnSharedPreferenceChangeListener(this);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt("setting_gallery_layout", 2));
+        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
         recyclerView.setAdapter(adapter);
@@ -134,7 +133,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     }
 
     private void uploadAdapterAndLayoutManager() {
-        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt("setting_gallery_layout", 2));
+        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
     }

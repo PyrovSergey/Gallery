@@ -4,7 +4,6 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
 
 @InjectViewState
@@ -17,5 +16,9 @@ public class Presenter extends MvpPresenter<MyContract> {
 
     public void searchWallpapers(String query) {
         getViewState().startListOfSelectedTopicsFragment(query);
+    }
+
+    public void callAboutGallery() {
+        getViewState().showAboutGalleryMessage();
     }
 }

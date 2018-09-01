@@ -17,7 +17,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -297,7 +296,7 @@ public class DetailActivity extends AppCompatActivity {
             Log.d("MyTAG", "onRequestPermissionsResult() - Permission: " + permissions[0] + " was " + grantResults[0]);
             downloadWallpaper();
         } else {
-            makeToast("The application needs to obtain permission to write to the external storage");
+            makeToast(getString(R.string.message_to_obtain_permission));
         }
     }
 
@@ -329,7 +328,7 @@ public class DetailActivity extends AppCompatActivity {
             }
             // Add the image to the system gallery
             galleryAddPic(savedImagePath);
-            makeToast("Image saved");
+            makeToast(getString(R.string.image_saved));
         }
     }
 
@@ -345,8 +344,8 @@ public class DetailActivity extends AppCompatActivity {
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType(SHARE_TYPE);
         intentShare.putExtra(Intent.EXTRA_TEXT,
-                "Photos provided by Pexels " + url);
-        Intent chooser = Intent.createChooser(intentShare, "Look at that...");
+                getString(R.string.photos_provided_by_pexels) + url);
+        Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
         if (intentShare.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
         }

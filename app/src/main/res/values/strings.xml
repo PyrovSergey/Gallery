@@ -166,5 +166,12 @@
 
     <string name="alert_message_install_this_wallpaper">Install this wallpaper?</string>
     <string name="about_text">This application was created for my portfolio. App shows photos from <a href="https://www.pexels.com/">pexels.com</a> - free stock photos resource. You can receive images from a PEXELS resource. It is possible to set images as wallpaper or download them to the phone\'s internal memory.To see the source code for this app, please visit the <a href="https://github.com/PyrovSergey/Gallery">github.com/PyrovSergey/Gallery</a>.</string>
+    <string name="message_to_obtain_permission">The application needs to obtain permission to write to the external storage</string>
+    <string name="image_saved">Image saved</string>
+    <string name="photos_provided_by_pexels">Photos provided by Pexels</string>
+    <string name="look_at_that">Look at that: </string>
+    <string name="set_as_wallpaper">set as wallpaper</string>
+    <string name="author">Author:</string>
+    <string name="powered_by">powered by</string>
 
 </resources>
