@@ -48,14 +48,6 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
         return recyclerView;
     }
 
-    private int getScreenOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return preferences.getInt("setting_gallery_layout", 2);
-        } else {
-            return 4;
-        }
-    }
-
     @Override
     public void onShowMessage(String message) {
         Toast.makeText(App.getInstance().getContext(), "ListThemeFragment" + message, Toast.LENGTH_SHORT).show();
@@ -67,18 +59,11 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     private void startListOfSelectedTopicsAdapter(String query) {
-        FragmentTransaction ft = null;
-        try {
-            ft = getActivity().getSupportFragmentManager().beginTransaction();
-        } catch (NullPointerException e) {
-            // TO_DO
-        }
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        if (ft != null) {
-            ft.add(R.id.frame, fragment);
-            ft.addToBackStack("ListOfSelectedTopics");
-            ft.commit();
-        }
+        ft.add(R.id.frame, fragment);
+        ft.addToBackStack("ListOfSelectedTopics");
+        ft.commit();
     }
 
     @Override
@@ -87,7 +72,7 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     private void uploadAdapterAndLayoutManager() {
-        layoutManager = new StaggeredGridLayoutManager(getScreenOrientation(), StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(preferences.getInt("setting_gallery_layout", 2), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListThemeFragmentAdapter(presenter.getMainListWallpaper());
     }

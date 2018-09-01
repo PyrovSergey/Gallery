@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "9726437059",
+    "firebase_url": "https://gallery-2e149.firebaseio.com",
+    "project_id": "gallery-2e149",
+    "storage_bucket": "gallery-2e149.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9726437059:android:13c38f2244716b60",
+        "android_client_info": {
+          "package_name": "ru.pyrovsergey.gallery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9726437059-1i4c024r1rfd6o9i3pv1fkkh8sukp3b9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.pyrovsergey.gallery",
+            "certificate_hash": "af71e170b3cca8098d08206e822a21bcddecb773"
+          }
+        },
+        {
+          "client_id": "9726437059-52iu4hraic5j174j8o5j44husrqbg6p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZG2mYcpUULf-FU4y2fe9SjPZqazvOXCw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9726437059-52iu4hraic5j174j8o5j44husrqbg6p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

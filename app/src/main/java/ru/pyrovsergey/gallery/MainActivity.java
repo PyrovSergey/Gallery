@@ -15,17 +15,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -184,6 +189,8 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     private void showAboutMessage() {
+        final SpannableString s = new SpannableString(getString(R.string.about_text));
+        Linkify.addLinks(s, Linkify.ALL);
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Light_Dialog_Alert);
@@ -194,6 +201,7 @@ public class MainActivity extends MvpAppCompatActivity
                         }
                     })
                     .show();
+            //((TextView)builder.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.app_name)
@@ -220,13 +228,13 @@ public class MainActivity extends MvpAppCompatActivity
         ft.addToBackStack("ListOfSelectedTopics");
         ft.commit();
     }
-
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        if (view != null && imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
+//
+//    private void hideKeyboard() {
+//        View view = this.getCurrentFocus();
+//        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+//        if (view != null && imm != null) {
+//            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//        }
+//    }
 
 }

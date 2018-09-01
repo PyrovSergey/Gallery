@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -70,7 +71,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
         preferences.registerOnSharedPreferenceChangeListener(this);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new GridLayoutManager(App.getInstance().getContext(), getScreenOrientation());
+        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt("setting_gallery_layout", 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
         recyclerView.setAdapter(adapter);
@@ -89,14 +90,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
             }
         });
         return view;
-    }
-
-    private int getScreenOrientation() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return preferences.getInt("setting_gallery_layout", 2);
-        } else {
-            return 4;
-        }
     }
 
     @Override
@@ -141,7 +134,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     }
 
     private void uploadAdapterAndLayoutManager() {
-        layoutManager = new GridLayoutManager(App.getInstance().getContext(), getScreenOrientation());
+        layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt("setting_gallery_layout", 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
     }
