@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,10 +66,12 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     @Override
     public void onClickListener(String query) {
         startListOfSelectedTopicsAdapter(query);
+//        Log.i("MyTAG", "сработал onClickListener ListThemeFragment на Теме - " + query);
     }
 
 
     private void startListOfSelectedTopicsAdapter(String query) {
+ //       Log.i("MyTAG", "сработал onClickListener startListOfSelectedTopicsAdapter на Теме - " + query);
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");

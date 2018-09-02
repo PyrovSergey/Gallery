@@ -35,7 +35,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter.requestFavoriteList();
+        //presenter.requestFavoriteList();
     }
 
     public static FavoriteFragment getInstance() {
@@ -85,6 +85,6 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     @Override
     public void adapterNotifyDataSetChanged() {
         adapter.updateDataAdapter(presenter.getFavoriteWallpapersList());
-        uploadAdapterAndLayoutManager();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
