@@ -1,15 +1,25 @@
 package ru.pyrovsergey.gallery.model.db;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
+import ru.pyrovsergey.gallery.DetailListener;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.model.PexelsApi;
 import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
@@ -22,8 +32,11 @@ public class DataStorage implements ContractDataStorage {
     private List<ThemeWallpaper> themeWallpapers;
     private final PexelsApi pexelsApi;
     private List<PhotosItem> photosItems;
+    private FavoriteWallpaperDao favoriteWallpaperDao;
 
     public DataStorage() {
+        AppGalleryDatabase database = App.getDatabase();
+        favoriteWallpaperDao = database.favoriteWallpaperDao();
         themeWallpapers = new ArrayList<>();
         initThemeWallpapersList();
         photosItems = new ArrayList<>();
@@ -215,5 +228,73 @@ public class DataStorage implements ContractDataStorage {
     @Override
     public List<PhotosItem> getPhotosItems() {
         return photosItems;
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void isAddedToBookmarks(int id, final DetailListener listener) {
+        favoriteWallpaperDao.getById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FavoriteWallpaper>() {
+                    @Override
+                    public void accept(FavoriteWallpaper favorite) throws Exception {
+                        listener.positiveResultCheckIsAddToBookmarks();
+                    }
+                });
+    }
+
+    @Override
+    public void deleteBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.delete(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onSuccessDeleteBookmark();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onErrorDeleteBookmark();
+                    }
+                });
+    }
+
+    @Override
+    public void insertBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.insert(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onSuccessInsertBookmark();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onErrorInsertBookmark();
+                    }
+                });
     }
 }

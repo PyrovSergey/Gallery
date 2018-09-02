@@ -17,7 +17,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -30,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
@@ -44,19 +45,10 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Completable;
-import io.reactivex.CompletableObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
-import ru.pyrovsergey.gallery.model.db.AppGalleryDatabase;
-import ru.pyrovsergey.gallery.model.db.FavoriteWallpaperDao;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends MvpAppCompatActivity implements DetailView {
 
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
@@ -65,11 +57,13 @@ public class DetailActivity extends AppCompatActivity {
     private static final String SHARE_TYPE = "text/html";
     public static final String KEY_FAVORITE_WALLPAPER_OBJECT = "ru.pyrovsergey.gallery_key_favorite_wallpaper_object";
     private final Handler mHideHandler = new Handler();
-    private FavoriteWallpaperDao favoriteWallpaperDao;
+
     private FavoriteWallpaper favoriteWallpaper;
     private Toast toast;
     private boolean isInBookmarks;
 
+    @InjectPresenter
+    DetailPresenter presenter;
 
     @BindView(R.id.button_bookmark)
     ImageView buttonBookmark;
@@ -100,8 +94,7 @@ public class DetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-        AppGalleryDatabase database = App.getDatabase();
-        favoriteWallpaperDao = database.favoriteWallpaperDao();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance
             w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -111,7 +104,10 @@ public class DetailActivity extends AppCompatActivity {
         mVisible = true;
         Intent intent = getIntent();
         favoriteWallpaper = intent.getParcelableExtra(KEY_FAVORITE_WALLPAPER_OBJECT);
-        isAddedToBookmarks(favoriteWallpaper.getId());
+
+        //isAddedToBookmarks(favoriteWallpaper.getId());
+        presenter.isAddToBookmarks(favoriteWallpaper.getId());
+
         if (TextUtils.isEmpty(favoriteWallpaper.getAuthor())) {
             titleAuthorTextView.setVisibility(View.INVISIBLE);
         } else {
@@ -166,36 +162,6 @@ public class DetailActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    private void toggle() {
-        if (mVisible) {
-            hide();
-        } else {
-            show();
-        }
-    }
-
-    private void hide() {
-        upperLinearLayout.setVisibility(View.GONE);
-        bottomLinearLayout.setVisibility(View.GONE);
-        mVisible = false;
-
-        // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks(mShowPart2Runnable);
-        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
-    }
-
-    @SuppressLint("InlinedApi")
-    private void show() {
-        // Show the system bar
-        detailImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
-
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
-    }
-
     /**
      * Schedules a call to hide() in delay milliseconds, canceling any
      * previously scheduled calls.
@@ -205,7 +171,38 @@ public class DetailActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    private void setWallpaperAlertMessage() {
+    @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image,
+            R.id.button_full_screen, R.id.button_download, R.id.button_share, R.id.button_bookmark})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.button_back:
+                onBackPressed();
+                break;
+            case R.id.button_set_as_wallpaper:
+                presenter.onClickSetWallpaper();
+                break;
+            case R.id.detail_image:
+                if (!mVisible) {
+                    show();
+                }
+                break;
+            case R.id.button_full_screen:
+                toggle();
+                break;
+            case R.id.button_download:
+                presenter.checkStoragePermission();
+                break;
+            case R.id.button_share:
+                presenter.onClickShare();
+                break;
+            case R.id.button_bookmark:
+                addOrRemoveBookmark(favoriteWallpaper);
+                break;
+        }
+    }
+
+    @Override
+    public void showSetWallpaperAlertMessage() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.alert_message_install_this_wallpaper)
                 .setCancelable(false)
@@ -213,7 +210,7 @@ public class DetailActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                setWallpaper();
+                                presenter.setWallpaper();
                             }
                         })
                 .setNegativeButton(android.R.string.no,
@@ -227,7 +224,8 @@ public class DetailActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void setWallpaper() {
+    @Override
+    public void setWallpaper() {
         BitmapDrawable bitmapDrawable = (BitmapDrawable) detailImage.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();
 
@@ -248,131 +246,43 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void makeToast(String message) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getApplicationContext(),
-                message,
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
-    @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image,
-            R.id.button_full_screen, R.id.button_download, R.id.button_share, R.id.button_bookmark})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.button_back:
-                onBackPressed();
-                break;
-            case R.id.button_set_as_wallpaper:
-                setWallpaperAlertMessage();
-                break;
-            case R.id.detail_image:
-                if (!mVisible) {
-                    show();
-                }
-                break;
-            case R.id.button_full_screen:
-                toggle();
-                break;
-            case R.id.button_download:
-                checkStoragePermissionGrantedAndDownload();
-                break;
-            case R.id.button_share:
-                share();
-                break;
-            case R.id.button_bookmark:
-                addOrRemoveBookmark(favoriteWallpaper);
-                break;
-        }
-    }
-
-    private void addOrRemoveBookmark(FavoriteWallpaper favorite) {
-        if (!isInBookmarks) {
-            insert(favorite);
+    private void toggle() {
+        if (mVisible) {
+            hide();
         } else {
-            delete(favorite);
+            show();
         }
     }
 
-    private void delete(final FavoriteWallpaper favorite) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                favoriteWallpaperDao.delete(favorite);
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    @SuppressLint("InlinedApi")
+    private void show() {
+        // Show the system bar
+        detailImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        mVisible = true;
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        isInBookmarks = false;
-                        buttonBookmark.setImageResource(R.drawable.bookmark_border);
-                        makeToast("Wallpaper delete in bookmarks");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+        // Schedule a runnable to display UI elements after a delay
+        mHideHandler.removeCallbacks(mHidePart2Runnable);
+        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    private void insert(final FavoriteWallpaper favorite) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                favoriteWallpaperDao.insert(favorite);
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+    private void hide() {
+        upperLinearLayout.setVisibility(View.GONE);
+        bottomLinearLayout.setVisibility(View.GONE);
+        mVisible = false;
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        isInBookmarks = true;
-                        buttonBookmark.setImageResource(R.drawable.bookmark);
-                        makeToast("Wallpaper add to bookmarks");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-                });
+        // Schedule a runnable to remove the status and navigation bar after a delay
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
+        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    @SuppressLint("CheckResult")
-    private void isAddedToBookmarks(final int id) {
-        favoriteWallpaperDao.getById(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<FavoriteWallpaper>() {
-                    @Override
-                    public void accept(FavoriteWallpaper favorite) throws Exception {
-                        buttonBookmark.setImageResource(R.drawable.bookmark);
-                        isInBookmarks = true;
-                    }
-                });
-    }
-
-    private void checkStoragePermissionGrantedAndDownload() {
+    @Override
+    public void checkStoragePermissionGrantedAndDownload() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 Log.d("MyTAG", "checkStoragePermissionGrantedAndDownload() - Permission is granted");
-                downloadWallpaper();
+                presenter.onClickDownloadWallpaper();
             } else {
                 Log.d("MyTAG", "checkStoragePermissionGrantedAndDownload() - Permission is revoked");
                 ActivityCompat.requestPermissions(this,
@@ -380,7 +290,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         } else {
             Log.d("MyTAG", "checkStoragePermissionGrantedAndDownload() - Permission is granted");
-            downloadWallpaper();
+            presenter.onClickDownloadWallpaper();
         }
     }
 
@@ -389,13 +299,14 @@ public class DetailActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d("MyTAG", "onRequestPermissionsResult() - Permission: " + permissions[0] + " was " + grantResults[0]);
-            downloadWallpaper();
+            presenter.onClickDownloadWallpaper();
         } else {
             makeToast(getString(R.string.message_to_obtain_permission));
         }
     }
 
-    private void downloadWallpaper() {
+    @Override
+    public void downloadWallpaper() {
         BitmapDrawable bitmapDrawable = (BitmapDrawable) detailImage.getDrawable();
         Bitmap image = bitmapDrawable.getBitmap();
         String savedImagePath;
@@ -435,15 +346,64 @@ public class DetailActivity extends AppCompatActivity {
         sendBroadcast(mediaScanIntent);
     }
 
-    private void share() {
+    @Override
+    public void share() {
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType(SHARE_TYPE);
         intentShare.putExtra(Intent.EXTRA_TEXT,
-                getString(R.string.photos_provided_by_pexels) + favoriteWallpaper.getUrl());
+                (getString(R.string.photos_provided_by_pexels) + " ") + favoriteWallpaper.getUrl());
         Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
         if (intentShare.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
         }
+    }
+
+    private void addOrRemoveBookmark(FavoriteWallpaper favorite) {
+        if (!isInBookmarks) {
+            presenter.insertBookmark(favorite);
+        } else {
+            presenter.deleteBookmark(favorite);
+        }
+    }
+
+    @Override
+    public void positiveResultCheckIsAddToBookmarks() {
+        buttonBookmark.setImageResource(R.drawable.bookmark);
+        isInBookmarks = true;
+    }
+
+    @Override
+    public void onSuccessDeleteBookmark() {
+        isInBookmarks = false;
+        buttonBookmark.setImageResource(R.drawable.bookmark_border);
+    }
+
+    @Override
+    public void onSuccessInsertBookmark() {
+        isInBookmarks = true;
+        buttonBookmark.setImageResource(R.drawable.bookmark);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public void showToastMessage(String message) {
+        makeToast(message);
+    }
+
+    private void makeToast(String message) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(getApplicationContext(),
+                message,
+                Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     @Override
@@ -452,11 +412,5 @@ public class DetailActivity extends AppCompatActivity {
         if (toast != null) {
             toast.cancel();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

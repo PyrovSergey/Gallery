@@ -159,9 +159,9 @@ public class MainActivity extends MvpAppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_gallery:
-                if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                    getSupportFragmentManager().popBackStack();
-                }
+////                if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+//                transaction.replace(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
+////                }
                 break;
             case R.id.nav_about_gallery:
                 presenter.callAboutGallery();

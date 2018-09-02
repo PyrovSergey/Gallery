@@ -9,6 +9,6 @@ public interface MyContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void startListOfSelectedTopicsFragment(String query);
 
-    @StateStrategyType(AddToEndSingleStrategy.class)
+    @StateStrategyType(SkipStrategy.class)
     void showAboutGalleryMessage();
 }
