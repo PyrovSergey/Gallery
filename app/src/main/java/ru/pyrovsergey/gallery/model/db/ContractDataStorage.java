@@ -7,6 +7,7 @@ import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
+import ru.pyrovsergey.gallery.presenter.FavoritePresenter;
 
 public interface ContractDataStorage {
     List<ThemeWallpaper> getMainListWallpapers();
@@ -20,4 +21,8 @@ public interface ContractDataStorage {
     void deleteBookmark(FavoriteWallpaper favorite, DetailListener listener);
 
     void insertBookmark(FavoriteWallpaper favorite, DetailListener listener);
+
+    void requestFavoriteList(FavoriteListener listener);
+
+    List<FavoriteWallpaper> getFavoriteWallpapersList();
 }

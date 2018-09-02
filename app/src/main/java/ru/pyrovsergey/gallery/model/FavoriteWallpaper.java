@@ -11,6 +11,8 @@ public class FavoriteWallpaper implements Parcelable {
     @PrimaryKey
     private int id;
 
+    private String smallUrl;
+
     private String url;
 
     private String author;
@@ -21,6 +23,14 @@ public class FavoriteWallpaper implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getSmallUrl() {
+        return smallUrl;
+    }
+
+    public void setSmallUrl(String smallUrl) {
+        this.smallUrl = smallUrl;
     }
 
     public String getUrl() {
@@ -47,6 +57,7 @@ public class FavoriteWallpaper implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
+        dest.writeString(this.smallUrl);
         dest.writeString(this.url);
         dest.writeString(this.author);
     }
@@ -56,6 +67,7 @@ public class FavoriteWallpaper implements Parcelable {
 
     protected FavoriteWallpaper(Parcel in) {
         this.id = in.readInt();
+        this.smallUrl = in.readString();
         this.url = in.readString();
         this.author = in.readString();
     }

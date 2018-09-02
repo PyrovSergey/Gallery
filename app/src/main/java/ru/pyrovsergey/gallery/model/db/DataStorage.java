@@ -3,6 +3,7 @@ package ru.pyrovsergey.gallery.model.db;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +30,10 @@ import ru.pyrovsergey.gallery.model.dto.Response;
 public class DataStorage implements ContractDataStorage {
 
     private static final int PER_PAGE = 40;
-    private List<ThemeWallpaper> themeWallpapers;
     private final PexelsApi pexelsApi;
+    private List<ThemeWallpaper> themeWallpapers;
     private List<PhotosItem> photosItems;
+    private List<FavoriteWallpaper> wallpaperList;
     private FavoriteWallpaperDao favoriteWallpaperDao;
 
     public DataStorage() {
@@ -40,6 +42,7 @@ public class DataStorage implements ContractDataStorage {
         themeWallpapers = new ArrayList<>();
         initThemeWallpapersList();
         photosItems = new ArrayList<>();
+        wallpaperList = new ArrayList<>();
         pexelsApi = App.getApi();
     }
 
@@ -296,5 +299,25 @@ public class DataStorage implements ContractDataStorage {
                         listener.onErrorInsertBookmark();
                     }
                 });
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void requestFavoriteList(final FavoriteListener listener) {
+        favoriteWallpaperDao.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<FavoriteWallpaper>>() {
+                    @Override
+                    public void accept(List<FavoriteWallpaper> employees) throws Exception {
+                        wallpaperList = employees;
+                        listener.onSuccess();
+                    }
+                });
+    }
+
+    @Override
+    public List<FavoriteWallpaper> getFavoriteWallpapersList() {
+        return wallpaperList;
     }
 }

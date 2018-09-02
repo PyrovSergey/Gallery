@@ -30,7 +30,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.pyrovsergey.gallery.app.App;
+import ru.pyrovsergey.gallery.ui.FavoriteFragment;
 import ru.pyrovsergey.gallery.ui.ListOfSelectedTopicsFragment;
+import ru.pyrovsergey.gallery.ui.ListThemeFragment;
 
 public class MainActivity extends MvpAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MyContract {
@@ -159,15 +161,17 @@ public class MainActivity extends MvpAppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_gallery:
-////                if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-//                transaction.replace(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
-////                }
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ListThemeFragment fragment = new ListThemeFragment();
+                ft.replace(R.id.frame, fragment, "ListThemeFragment");
+                ft.commitAllowingStateLoss();
                 break;
             case R.id.nav_about_gallery:
                 presenter.callAboutGallery();
                 break;
-//            case R.id.nav_slideshow:
-//                break;
+            case R.id.nav_my_favorite:
+                startFavoriteFragment();
+                break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -202,7 +206,7 @@ public class MainActivity extends MvpAppCompatActivity
 
     @Override
     public void startListOfSelectedTopicsFragment(String query) {
-        startListOfSelectedTopicsAdapter(query);
+        starFragmentListOfSelectedTopics(query);
     }
 
     @Override
@@ -210,10 +214,18 @@ public class MainActivity extends MvpAppCompatActivity
         showAboutMessage();
     }
 
-    private void startListOfSelectedTopicsAdapter(String query) {
+    private void starFragmentListOfSelectedTopics(String query) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
         ft.commitAllowingStateLoss();
     }
+
+    private void startFavoriteFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FavoriteFragment fragment = FavoriteFragment.getInstance();
+        ft.replace(R.id.frame, fragment, "FavoriteFragment");
+        ft.commitAllowingStateLoss();
+    }
+
 }

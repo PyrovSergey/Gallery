@@ -27,6 +27,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
+
     private ProgressBar paginationProgressBar;
     private ProgressBar progressBar;
     private String query;
