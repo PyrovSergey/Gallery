@@ -134,7 +134,7 @@ public class MainActivity extends MvpAppCompatActivity
         searchView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
-                Toast.makeText(App.getInstance().getContext(), String.valueOf(visibility), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(App.getInstance().getContext(), String.valueOf(visibility), Toast.LENGTH_SHORT).show();
             }
         });
 
