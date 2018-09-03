@@ -61,7 +61,7 @@ public class App extends Application {
     private static Retrofit getRetrofitClient(String baseUrl, OkHttpClient okHttpClient) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
+                        .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

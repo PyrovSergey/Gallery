@@ -20,7 +20,13 @@ public class FavoritePresenter extends MvpPresenter<FavoriteContract> implements
     }
 
     public List<FavoriteWallpaper> getFavoriteWallpapersList() {
-        return dataStorage.getFavoriteWallpapersList();
+        List<FavoriteWallpaper> list = dataStorage.getFavoriteWallpapersList();
+        if (list.size() == 0) {
+            getViewState().showTextEmptyList();
+        } else {
+            getViewState().hideTextEmptyList();
+        }
+        return list;
     }
 
     public void requestFavoriteList(){

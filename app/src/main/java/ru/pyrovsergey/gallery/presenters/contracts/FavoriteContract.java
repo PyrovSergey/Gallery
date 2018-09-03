@@ -7,4 +7,8 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 public interface FavoriteContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void adapterNotifyDataSetChanged();
+
+    void hideTextEmptyList();
+
+    void showTextEmptyList();
 }

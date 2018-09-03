@@ -18,9 +18,20 @@
             android:scrollbars="vertical"
             tools:listitem="@layout/wallpaper_photo_item" />
 
+        <TextView
+            android:id="@+id/choice_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/list_of_favorite_wallpapers_is_empty"
+            android:textSize="21sp"
+            tools:text="Test"
+            android:visibility="invisible" />
+
         <ProgressBar
             android:id="@+id/choice_list_progress_bar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/colorWhite"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="invisible" />

@@ -5,10 +5,12 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,6 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
@@ -30,11 +35,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.presenters.HeadPresenter;
-import ru.pyrovsergey.gallery.presenters.contracts.HeadContract;
 import ru.pyrovsergey.gallery.fragments.FavoriteFragment;
 import ru.pyrovsergey.gallery.fragments.ListOfSelectedTopicsFragment;
 import ru.pyrovsergey.gallery.fragments.ListThemeFragment;
+import ru.pyrovsergey.gallery.presenters.HeadPresenter;
+import ru.pyrovsergey.gallery.presenters.contracts.HeadContract;
 
 public class MainActivity extends MvpAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HeadContract {
@@ -47,7 +52,8 @@ public class MainActivity extends MvpAppCompatActivity
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    private FragmentTransaction transaction;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
     private SharedPreferences.Editor editor;
     private SharedPreferences preferences;
 
@@ -59,6 +65,8 @@ public class MainActivity extends MvpAppCompatActivity
         setSupportActionBar(toolbar);
         preferences = getPreferences(MODE_PRIVATE);
         editor = preferences.edit();
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_menu_black_24dp);
+        toolbar.setOverflowIcon(drawable);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow();
@@ -73,15 +81,15 @@ public class MainActivity extends MvpAppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
         if (savedInstanceState == null) {
-            transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
+            startOrReplaceListThemeFragment();
         }
     }
 
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag("ListOfSelectedTopics") != null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame, App.getComponent().getListThemeFragment()).commitAllowingStateLoss();
+            startOrReplaceListThemeFragment();
+
         } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -94,6 +102,12 @@ public class MainActivity extends MvpAppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
+        ImageView searchCloseIcon = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
+        searchCloseIcon.setImageResource(R.drawable.ic_close_black_24dp);
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.colorBlack));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.black_overlay));
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         if (null != searchManager) {
@@ -111,9 +125,7 @@ public class MainActivity extends MvpAppCompatActivity
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
-//                    if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-//                        getSupportFragmentManager().popBackStack();   FIXED!!!
-//                    }
+                    startOrReplaceListThemeFragment();
                 }
                 return false;
             }
@@ -148,8 +160,6 @@ public class MainActivity extends MvpAppCompatActivity
             editor.apply();
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,20 +169,50 @@ public class MainActivity extends MvpAppCompatActivity
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_gallery:
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ListThemeFragment fragment = new ListThemeFragment();
-                ft.replace(R.id.frame, fragment, "ListThemeFragment");
-                ft.commitAllowingStateLoss();
+                startOrReplaceListThemeFragment();
                 break;
             case R.id.nav_about_gallery:
                 headPresenter.callAboutGallery();
                 break;
             case R.id.nav_my_favorite:
-                startFavoriteFragment();
+                startOrReplaceFavoriteFragment();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void startListOfSelectedTopicsFragment(String query) {
+        startOrReplaceFragmentListOfSelectedTopics(query);
+    }
+
+    @Override
+    public void showAboutGalleryMessage() {
+        showAboutMessage();
+    }
+
+    private void startOrReplaceListThemeFragment() {
+        toolbarTitle.setText(R.string.app_name);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ListThemeFragment fragment = App.getComponent().getListThemeFragment();
+        ft.replace(R.id.frame, fragment, "ListThemeFragment");
+        ft.commitAllowingStateLoss();
+    }
+
+    private void startOrReplaceFragmentListOfSelectedTopics(String query) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
+        ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
+        ft.commitAllowingStateLoss();
+    }
+
+    private void startOrReplaceFavoriteFragment() {
+        toolbarTitle.setText(R.string.my_favorite_wallpapers);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FavoriteFragment fragment = FavoriteFragment.getInstance();
+        ft.replace(R.id.frame, fragment, "FavoriteFragment");
+        ft.commitAllowingStateLoss();
     }
 
     private void showAboutMessage() {
@@ -201,29 +241,4 @@ public class MainActivity extends MvpAppCompatActivity
                     .show();
         }
     }
-
-    @Override
-    public void startListOfSelectedTopicsFragment(String query) {
-        starFragmentListOfSelectedTopics(query);
-    }
-
-    @Override
-    public void showAboutGalleryMessage() {
-        showAboutMessage();
-    }
-
-    private void starFragmentListOfSelectedTopics(String query) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
-        ft.commitAllowingStateLoss();
-    }
-
-    private void startFavoriteFragment() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FavoriteFragment fragment = FavoriteFragment.getInstance();
-        ft.replace(R.id.frame, fragment, "FavoriteFragment");
-        ft.commitAllowingStateLoss();
-    }
-
 }

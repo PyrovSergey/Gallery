@@ -62,11 +62,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         clear();
         wallpaperList = list;
         notifyDataSetChanged();
-//        Log.i("MyTAG", "FavoriteAdapter list count - " + wallpaperList.size());
-//        int startPosition = wallpaperList.size();
-//        int lastPosition = list.size();
-//        wallpaperList.addAll(list);
-//        notifyItemRangeInserted(startPosition, startPosition + lastPosition);
     }
 
     public void clear() {

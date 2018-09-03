@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -18,8 +19,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.fragments.adapters.FavoriteAdapter;
-import ru.pyrovsergey.gallery.presenters.contracts.FavoriteContract;
 import ru.pyrovsergey.gallery.presenters.FavoritePresenter;
+import ru.pyrovsergey.gallery.presenters.contracts.FavoriteContract;
 
 public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
@@ -29,6 +30,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     private FavoriteAdapter adapter;
     private GridLayoutManager layoutManager;
     private SharedPreferences preferences;
+    private TextView textViewEmpty;
 
     @InjectPresenter
     FavoritePresenter presenter;
@@ -50,6 +52,8 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
         progressBar.setVisibility(View.VISIBLE);
         preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         preferences.registerOnSharedPreferenceChangeListener(this);
+        textViewEmpty = view.findViewById(R.id.choice_list_text);
+        textViewEmpty.setVisibility(View.INVISIBLE);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
@@ -86,5 +90,15 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     public void adapterNotifyDataSetChanged() {
         adapter.updateDataAdapter(presenter.getFavoriteWallpapersList());
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideTextEmptyList() {
+        textViewEmpty.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void showTextEmptyList() {
+        textViewEmpty.setVisibility(View.VISIBLE);
     }
 }

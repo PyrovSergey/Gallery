@@ -179,5 +179,6 @@
     <string name="two_line">Two line</string>
     <string name="three_line">Three line</string>
     <string name="four_line">Four line</string>
+    <string name="list_of_favorite_wallpapers_is_empty">List of favorite wallpapers is empty</string>
 
 </resources>

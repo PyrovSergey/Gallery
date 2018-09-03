@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -22,7 +23,8 @@ import ru.pyrovsergey.gallery.fragments.adapters.ListOfSelectedTopicsAdapter;
 import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
 import ru.pyrovsergey.gallery.presenters.ListOfSelectedTopicsFragmentPresenter;
 
-public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
+public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
+        implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_QUERY = "ru.pyrovsergey.gallery.ui_key_query";
     private static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
 
@@ -31,6 +33,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
 
     private ProgressBar paginationProgressBar;
     private ProgressBar progressBar;
+    private TextView textViewEmpty;
     private String query;
     private RecyclerView recyclerView;
     private ListOfSelectedTopicsAdapter adapter;
@@ -94,14 +97,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     }
 
     @Override
-    public void adapterNotifyDataSetChanged() {
-        hideProgressBar();
-        isFirstStart = false;
-        loading = false;
-        adapter.updateDataAdapter(presenter.getPhotosItemList());
-    }
-
-    @Override
     public void onErrorLoadOfLastPage() {
         hideProgressBar();
         isLastPage = true;
@@ -132,6 +127,14 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implement
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         uploadAdapterAndLayoutManager();
+    }
+
+    @Override
+    public void adapterNotifyDataSetChanged() {
+        hideProgressBar();
+        isFirstStart = false;
+        loading = false;
+        adapter.updateDataAdapter(presenter.getPhotosItemList());
     }
 
     private void uploadAdapterAndLayoutManager() {
