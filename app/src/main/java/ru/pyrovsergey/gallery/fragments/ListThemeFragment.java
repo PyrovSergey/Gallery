@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.ui;
+package ru.pyrovsergey.gallery.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import ru.pyrovsergey.gallery.MainActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.presenter.ListThemeContract;
-import ru.pyrovsergey.gallery.presenter.ListThemeFragmentPresenter;
+import ru.pyrovsergey.gallery.fragments.adapters.ListThemeFragmentAdapter;
+import ru.pyrovsergey.gallery.presenters.contracts.ListThemeContract;
+import ru.pyrovsergey.gallery.presenters.ListThemeFragmentPresenter;
+import ru.pyrovsergey.gallery.presenters.listeners.ListThemeFragmentAdapterListener;
 
 
 public class ListThemeFragment extends MvpAppCompatFragment implements ListThemeContract, ListThemeFragmentAdapterListener, SharedPreferences.OnSharedPreferenceChangeListener {

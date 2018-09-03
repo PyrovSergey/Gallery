@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.model.db;
+package ru.pyrovsergey.gallery.presenters.listeners;
 
 public interface FavoriteListener {
     void onSuccess();

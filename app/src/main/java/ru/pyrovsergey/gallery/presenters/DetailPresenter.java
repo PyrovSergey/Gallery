@@ -1,49 +1,51 @@
-package ru.pyrovsergey.gallery;
+package ru.pyrovsergey.gallery.presenters;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
+import ru.pyrovsergey.gallery.presenters.listeners.DetailListener;
+import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
-import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
+import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
 
 @InjectViewState
-public class DetailPresenter extends MvpPresenter<DetailView> implements DetailListener {
-    private ContractDataStorage dataStorage;
+public class DetailPresenter extends MvpPresenter<DetailViewContract> implements DetailListener {
+    private DataStorageContract dataStorage;
 
     public DetailPresenter() {
         dataStorage = App.getComponent().getDataStorage();
     }
 
-    void isAddToBookmarks(int id) {
+    public void isAddToBookmarks(int id) {
         dataStorage.isAddedToBookmarks(id, this);
     }
 
-    void deleteBookmark(FavoriteWallpaper favorite) {
+    public void deleteBookmark(FavoriteWallpaper favorite) {
         dataStorage.deleteBookmark(favorite, this);
     }
 
-    void insertBookmark(FavoriteWallpaper favoriteWallpaper) {
+    public void insertBookmark(FavoriteWallpaper favoriteWallpaper) {
         dataStorage.insertBookmark(favoriteWallpaper, this);
     }
 
-    void onClickDownloadWallpaper() {
+    public void onClickDownloadWallpaper() {
         getViewState().downloadWallpaper();
     }
 
-    void onClickShare() {
+    public void onClickShare() {
         getViewState().share();
     }
 
-    void onClickSetWallpaper() {
+    public void onClickSetWallpaper() {
         getViewState().showSetWallpaperAlertMessage();
     }
 
-    void setWallpaper() {
+    public void setWallpaper() {
         getViewState().setWallpaper();
     }
 
-    void checkStoragePermission() {
+    public void checkStoragePermission() {
         getViewState().checkStoragePermissionGrantedAndDownload();
     }
 

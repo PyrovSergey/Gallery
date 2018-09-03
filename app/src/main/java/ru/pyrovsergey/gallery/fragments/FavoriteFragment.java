@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.ui;
+package ru.pyrovsergey.gallery.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,8 +17,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.presenter.FavoriteContract;
-import ru.pyrovsergey.gallery.presenter.FavoritePresenter;
+import ru.pyrovsergey.gallery.fragments.adapters.FavoriteAdapter;
+import ru.pyrovsergey.gallery.presenters.contracts.FavoriteContract;
+import ru.pyrovsergey.gallery.presenters.FavoritePresenter;
 
 public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";

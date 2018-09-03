@@ -47,8 +47,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
+import ru.pyrovsergey.gallery.presenters.DetailPresenter;
+import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
 
-public class DetailActivity extends MvpAppCompatActivity implements DetailView {
+public class DetailActivity extends MvpAppCompatActivity implements DetailViewContract {
 
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;

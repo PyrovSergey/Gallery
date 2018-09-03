@@ -1,7 +1,6 @@
 package ru.pyrovsergey.gallery.model;
 
 import retrofit2.Call;
-
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import ru.pyrovsergey.gallery.model.dto.Response;

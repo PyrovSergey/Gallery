@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.ui;
+package ru.pyrovsergey.gallery.fragments.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -18,36 +18,30 @@ import ru.pyrovsergey.gallery.DetailActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
-import ru.pyrovsergey.gallery.model.dto.PhotosItem;
 
-class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTopicsAdapter.ViewHolder> {
-    private List<PhotosItem> photosItems;
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
-    public ListOfSelectedTopicsAdapter(List<PhotosItem> photosItems) {
-        this.photosItems = photosItems;
+    private List<FavoriteWallpaper> wallpaperList;
+
+    public FavoriteAdapter(List<FavoriteWallpaper> wallpaperList) {
+        this.wallpaperList = wallpaperList;
     }
 
     @NonNull
     @Override
-    public ListOfSelectedTopicsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavoriteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wallpaper_photo_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ListOfSelectedTopicsAdapter.ViewHolder holder, int position) {
-        final PhotosItem photosItem = photosItems.get(position);
-
-        Picasso.get().load(photosItem.getSrc().getSmall()).placeholder(R.drawable.placeholder).into(holder.imageView);
+    public void onBindViewHolder(@NonNull FavoriteAdapter.ViewHolder holder, int position) {
+        final FavoriteWallpaper favoriteWallpaper = wallpaperList.get(position);
+        Picasso.get().load(favoriteWallpaper.getSmallUrl()).placeholder(R.drawable.placeholder).into(holder.imageView);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FavoriteWallpaper favoriteWallpaper = new FavoriteWallpaper();
-                favoriteWallpaper.setId(photosItem.getId());
-                favoriteWallpaper.setUrl(photosItem.getSrc().getPortrait());
-                favoriteWallpaper.setAuthor(photosItem.getPhotographer());
-                favoriteWallpaper.setSmallUrl(photosItem.getSrc().getSmall());
                 DetailActivity.startDetailActivity(favoriteWallpaper);
             }
         });
@@ -61,11 +55,22 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
 
     @Override
     public int getItemCount() {
-        return photosItems.size();
+        return wallpaperList.size();
+    }
+
+    public void updateDataAdapter(List<FavoriteWallpaper> list) {
+        clear();
+        wallpaperList = list;
+        notifyDataSetChanged();
+//        Log.i("MyTAG", "FavoriteAdapter list count - " + wallpaperList.size());
+//        int startPosition = wallpaperList.size();
+//        int lastPosition = list.size();
+//        wallpaperList.addAll(list);
+//        notifyItemRangeInserted(startPosition, startPosition + lastPosition);
     }
 
     public void clear() {
-        photosItems.clear();
+        wallpaperList.clear();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -79,12 +84,5 @@ class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSelectedTop
             imageView = view.findViewById(R.id.list_of_selected_topics_fragment_image);
             cardView = view.findViewById(R.id.list_of_selected_topics_fragment_card_view);
         }
-    }
-
-    public void updateDataAdapter(List<PhotosItem> list) {
-        int startPosition = photosItems.size();
-        int lastPosition = list.size();
-        photosItems.addAll(list);
-        notifyItemRangeInserted(startPosition, startPosition + lastPosition);
     }
 }

@@ -5,19 +5,19 @@
     <item
         android:id="@+id/action_settings_two_line"
         android:orderInCategory="100"
-        android:title="Two line"
+        android:title="@string/two_line"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings_three_line"
         android:orderInCategory="100"
-        android:title="Three line"
+        android:title="@string/three_line"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings_four_line"
         android:orderInCategory="100"
-        android:title="Four line"
+        android:title="@string/four_line"
         app:showAsAction="never" />
 
     <item

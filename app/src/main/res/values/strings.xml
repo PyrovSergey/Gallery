@@ -176,5 +176,8 @@
     <string name="my_favorite_wallpapers">My favorite wallpapers</string>
     <string name="info">Info</string>
     <string name="about_gallery">About Gallery</string>
+    <string name="two_line">Two line</string>
+    <string name="three_line">Three line</string>
+    <string name="four_line">Four line</string>
 
 </resources>

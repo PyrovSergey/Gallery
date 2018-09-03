@@ -1,10 +1,10 @@
-package ru.pyrovsergey.gallery.presenter;
+package ru.pyrovsergey.gallery.fragments.modules;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import ru.pyrovsergey.gallery.ui.ListThemeFragment;
+import ru.pyrovsergey.gallery.fragments.ListThemeFragment;
 
 @Module
 public class ListThemeFragmentModule {

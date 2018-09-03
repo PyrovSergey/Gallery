@@ -1,16 +1,17 @@
-package ru.pyrovsergey.gallery;
+package ru.pyrovsergey.gallery.presenters;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
+import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
+import ru.pyrovsergey.gallery.presenters.contracts.HeadContract;
 
 @InjectViewState
-public class Presenter extends MvpPresenter<MyContract> {
-    private ContractDataStorage dataStorage;
+public class HeadPresenter extends MvpPresenter<HeadContract> {
+    private DataStorageContract dataStorage;
 
-    public Presenter() {
+    public HeadPresenter() {
         dataStorage = App.getComponent().getDataStorage();
     }
 

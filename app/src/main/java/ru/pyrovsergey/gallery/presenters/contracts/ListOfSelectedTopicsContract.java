@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.presenter;
+package ru.pyrovsergey.gallery.presenters.contracts;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;

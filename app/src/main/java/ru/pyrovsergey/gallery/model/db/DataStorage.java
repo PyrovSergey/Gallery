@@ -3,7 +3,6 @@ package ru.pyrovsergey.gallery.model.db;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
-import ru.pyrovsergey.gallery.DetailListener;
+import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
+import ru.pyrovsergey.gallery.presenters.listeners.DetailListener;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
@@ -26,8 +26,9 @@ import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
 import ru.pyrovsergey.gallery.model.dto.Response;
+import ru.pyrovsergey.gallery.presenters.listeners.FavoriteListener;
 
-public class DataStorage implements ContractDataStorage {
+public class DataStorage implements DataStorageContract {
 
     private static final int PER_PAGE = 40;
     private final PexelsApi pexelsApi;

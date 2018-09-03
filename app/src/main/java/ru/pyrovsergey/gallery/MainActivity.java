@@ -30,15 +30,17 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.ui.FavoriteFragment;
-import ru.pyrovsergey.gallery.ui.ListOfSelectedTopicsFragment;
-import ru.pyrovsergey.gallery.ui.ListThemeFragment;
+import ru.pyrovsergey.gallery.presenters.HeadPresenter;
+import ru.pyrovsergey.gallery.presenters.contracts.HeadContract;
+import ru.pyrovsergey.gallery.fragments.FavoriteFragment;
+import ru.pyrovsergey.gallery.fragments.ListOfSelectedTopicsFragment;
+import ru.pyrovsergey.gallery.fragments.ListThemeFragment;
 
 public class MainActivity extends MvpAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MyContract {
+        implements NavigationView.OnNavigationItemSelectedListener, HeadContract {
     public static final String SETTING_GALLERY_LAYOUT = "setting_gallery_layout";
     @InjectPresenter
-    Presenter presenter;
+    HeadPresenter headPresenter;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
@@ -59,7 +61,7 @@ public class MainActivity extends MvpAppCompatActivity
         editor = preferences.edit();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            Window w = getWindow(); // in Activity's onCreate() for instance
+            Window w = getWindow();
             w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
@@ -89,7 +91,6 @@ public class MainActivity extends MvpAppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
@@ -103,16 +104,16 @@ public class MainActivity extends MvpAppCompatActivity
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                presenter.searchWallpapers(query);
+                headPresenter.searchWallpapers(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
-                    if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-                        getSupportFragmentManager().popBackStack();
-                    }
+//                    if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+//                        getSupportFragmentManager().popBackStack();   FIXED!!!
+//                    }
                 }
                 return false;
             }
@@ -130,9 +131,6 @@ public class MainActivity extends MvpAppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings_two_line) {
             editor.putInt(SETTING_GALLERY_LAYOUT, 2);
@@ -167,7 +165,7 @@ public class MainActivity extends MvpAppCompatActivity
                 ft.commitAllowingStateLoss();
                 break;
             case R.id.nav_about_gallery:
-                presenter.callAboutGallery();
+                headPresenter.callAboutGallery();
                 break;
             case R.id.nav_my_favorite:
                 startFavoriteFragment();

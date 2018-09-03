@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.ui;
+package ru.pyrovsergey.gallery.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,8 +18,9 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsContract;
-import ru.pyrovsergey.gallery.presenter.ListOfSelectedTopicsFragmentPresenter;
+import ru.pyrovsergey.gallery.fragments.adapters.ListOfSelectedTopicsAdapter;
+import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
+import ru.pyrovsergey.gallery.presenters.ListOfSelectedTopicsFragmentPresenter;
 
 public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String KEY_QUERY = "ru.pyrovsergey.gallery.ui_key_query";

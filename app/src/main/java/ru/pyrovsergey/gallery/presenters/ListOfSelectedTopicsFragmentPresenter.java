@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.presenter;
+package ru.pyrovsergey.gallery.presenters;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -7,12 +7,13 @@ import java.util.List;
 
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
-import ru.pyrovsergey.gallery.model.db.ContractDataStorage;
+import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
+import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
 
 @InjectViewState
 public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSelectedTopicsContract> implements SearchPhotosCallback {
-    private ContractDataStorage dataStorage;
+    private DataStorageContract dataStorage;
 
     public ListOfSelectedTopicsFragmentPresenter() {
         dataStorage = App.getComponent().getDataStorage();

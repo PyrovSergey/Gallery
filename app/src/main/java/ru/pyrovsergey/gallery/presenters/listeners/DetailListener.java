@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery;
+package ru.pyrovsergey.gallery.presenters.listeners;
 
 public interface DetailListener {
     void positiveResultCheckIsAddToBookmarks();
