@@ -35,7 +35,6 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //presenter.requestFavoriteList();
     }
 
     public static FavoriteFragment getInstance() {
@@ -62,7 +61,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     @Override
     public void onResume() {
         super.onResume();
-        presenter.requestFavoriteList(); // <-- при вызове должно сработать обновление адаптера
+        presenter.requestFavoriteList();
     }
 
     @Override
