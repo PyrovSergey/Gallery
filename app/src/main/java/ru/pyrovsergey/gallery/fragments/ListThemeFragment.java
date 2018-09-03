@@ -80,9 +80,9 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
         ft.commitAllowingStateLoss();
-        if (!TextUtils.isEmpty(query)) {
-            toolbarTitle.setText(query);
-        }
+//        if (!TextUtils.isEmpty(query)) {
+//            toolbarTitle.setText(query);
+//        }
     }
 
     @Override
