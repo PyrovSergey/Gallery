@@ -13,7 +13,9 @@ public class FavoriteWallpaper implements Parcelable {
 
     private String smallUrl;
 
-    private String url;
+    private String portraitUrl;
+
+    private String landscapeUrl;
 
     private String author;
 
@@ -33,12 +35,20 @@ public class FavoriteWallpaper implements Parcelable {
         this.smallUrl = smallUrl;
     }
 
-    public String getUrl() {
-        return url;
+    public String getPortraitUrl() {
+        return portraitUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setPortraitUrl(String portraitUrl) {
+        this.portraitUrl = portraitUrl;
+    }
+
+    public String getLandscapeUrl() {
+        return landscapeUrl;
+    }
+
+    public void setLandscapeUrl(String landscapeUrl) {
+        this.landscapeUrl = landscapeUrl;
     }
 
     public String getAuthor() {
@@ -58,7 +68,8 @@ public class FavoriteWallpaper implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
         dest.writeString(this.smallUrl);
-        dest.writeString(this.url);
+        dest.writeString(this.portraitUrl);
+        dest.writeString(this.landscapeUrl);
         dest.writeString(this.author);
     }
 
@@ -68,7 +79,8 @@ public class FavoriteWallpaper implements Parcelable {
     protected FavoriteWallpaper(Parcel in) {
         this.id = in.readInt();
         this.smallUrl = in.readString();
-        this.url = in.readString();
+        this.portraitUrl = in.readString();
+        this.landscapeUrl = in.readString();
         this.author = in.readString();
     }
 

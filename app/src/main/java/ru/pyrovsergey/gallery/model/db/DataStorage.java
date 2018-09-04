@@ -61,6 +61,7 @@ public class DataStorage implements DataStorageContract {
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.beauty), R.drawable.beauty));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.black_and_white), R.drawable.black_and_white));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.blur), R.drawable.blur));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.blue), R.drawable.blue));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.books), R.drawable.books));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.building), R.drawable.building));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.business), R.drawable.business));
@@ -120,7 +121,7 @@ public class DataStorage implements DataStorageContract {
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.job), R.drawable.job));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.kids), R.drawable.kids));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.kitchen), R.drawable.kitchen));
-        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.landscape), R.drawable.landscape));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.landscape), R.drawable.landscape_image));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.laptop), R.drawable.laptop));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.light), R.drawable.light));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.love), R.drawable.love));
@@ -144,6 +145,7 @@ public class DataStorage implements DataStorageContract {
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.notebook), R.drawable.notebook));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.office), R.drawable.office));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.old), R.drawable.old));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.orange), R.drawable.orange));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.paint), R.drawable.paint));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.paper), R.drawable.paper));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.party), R.drawable.party));
@@ -152,9 +154,11 @@ public class DataStorage implements DataStorageContract {
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.phone), R.drawable.phone));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.photography), R.drawable.photography));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.plane), R.drawable.plane));
-        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.portrait), R.drawable.portrait));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.portrait), R.drawable.portrait_image));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.purple), R.drawable.purple));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.rain), R.drawable.rain));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.reading), R.drawable.reading));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.red), R.drawable.red));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.relax), R.drawable.relax));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.river), R.drawable.river));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.road), R.drawable.road));
@@ -200,6 +204,7 @@ public class DataStorage implements DataStorageContract {
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.work), R.drawable.work));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.working), R.drawable.working));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.writing), R.drawable.writing));
+        themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.yellow), R.drawable.yellow));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.yoga), R.drawable.yoga));
         themeWallpapers.add(new ThemeWallpaper(resources.getString(R.string.young), R.drawable.young));
     }

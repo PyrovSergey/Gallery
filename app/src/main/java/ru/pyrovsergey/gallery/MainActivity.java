@@ -27,7 +27,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -205,6 +204,9 @@ public class MainActivity extends MvpAppCompatActivity
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
         ft.commitAllowingStateLoss();
+        if (toolbarTitle != null && !TextUtils.isEmpty(query)) {
+            toolbarTitle.setText(query);
+        }
     }
 
     private void startOrReplaceFavoriteFragment() {

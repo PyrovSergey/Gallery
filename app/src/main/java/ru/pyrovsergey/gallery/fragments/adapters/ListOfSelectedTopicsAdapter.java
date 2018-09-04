@@ -45,7 +45,8 @@ public class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSele
             public void onClick(View v) {
                 FavoriteWallpaper favoriteWallpaper = new FavoriteWallpaper();
                 favoriteWallpaper.setId(photosItem.getId());
-                favoriteWallpaper.setUrl(photosItem.getSrc().getPortrait());
+                favoriteWallpaper.setPortraitUrl(photosItem.getSrc().getPortrait());
+                favoriteWallpaper.setLandscapeUrl(photosItem.getSrc().getLarge());
                 favoriteWallpaper.setAuthor(photosItem.getPhotographer());
                 favoriteWallpaper.setSmallUrl(photosItem.getSrc().getSmall());
                 DetailActivity.startDetailActivity(favoriteWallpaper);

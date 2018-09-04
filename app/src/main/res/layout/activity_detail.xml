@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context=".DetailActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -14,15 +15,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
-        android:scaleType="centerCrop"
         android:src="@drawable/placeholder" />
+
+    <ProgressBar
+        android:id="@+id/detail_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
     <FrameLayout
+        android:id="@+id/detail_head_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/upper_linear_layout"
@@ -53,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="10dp"
-                    android:gravity="right"
                     android:text="@string/set_as_wallpaper"
                     android:textAllCaps="true"
                     android:textColor="#FFFFFF"
@@ -72,32 +80,42 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <TextView
-                android:id="@+id/title_author_text_view"
-                style="?metaButtonBarStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/author"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/author_text_view"
-                style="?metaButtonBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/title_author_text_view"
+                    style="?metaButtonBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/author"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/author_text_view"
+                    style="?metaButtonBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="2dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="Zukirman Mohamad"/>
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="right|top"
                 android:orientation="horizontal">
 
@@ -109,6 +127,15 @@
                     android:layout_marginRight="8dp"
                     android:padding="8dp"
                     android:src="@drawable/bookmark_border" />
+
+                <ImageView
+                    android:id="@+id/button_orientation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginRight="8dp"
+                    android:padding="8dp"
+                    android:src="@drawable/landscape" />
 
                 <ImageView
                     android:id="@+id/button_share"

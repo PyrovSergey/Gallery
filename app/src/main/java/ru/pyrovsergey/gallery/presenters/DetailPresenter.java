@@ -3,11 +3,12 @@ package ru.pyrovsergey.gallery.presenters;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 
-import ru.pyrovsergey.gallery.presenters.listeners.DetailListener;
-import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
+import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
+import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
+import ru.pyrovsergey.gallery.presenters.listeners.DetailListener;
 
 @InjectViewState
 public class DetailPresenter extends MvpPresenter<DetailViewContract> implements DetailListener {
@@ -57,22 +58,22 @@ public class DetailPresenter extends MvpPresenter<DetailViewContract> implements
     @Override
     public void onSuccessDeleteBookmark() {
         getViewState().onSuccessDeleteBookmark();
-        getViewState().showToastMessage("Wallpaper removed from bookmarks");
+        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.removed_from_favorites));
     }
 
     @Override
     public void onErrorDeleteBookmark() {
-        getViewState().showToastMessage("Error removing from bookmarks");
+        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.failed_to_delete_from_favorites));
     }
 
     @Override
     public void onSuccessInsertBookmark() {
         getViewState().onSuccessInsertBookmark();
-        getViewState().showToastMessage("Wallpaper insert in bookmarks");
+        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.added_to_favorites));
     }
 
     @Override
     public void onErrorInsertBookmark() {
-        getViewState().showToastMessage("Error adding to bookmarks");
+        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.error_adding_to_favorites));
     }
 }

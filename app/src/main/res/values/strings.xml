@@ -173,12 +173,21 @@
     <string name="set_as_wallpaper">set as wallpaper</string>
     <string name="author">Author:</string>
     <string name="powered_by">powered by</string>
-    <string name="my_favorite_wallpapers">My favorite wallpapers</string>
+    <string name="my_favorite_wallpapers">My favorite</string>
     <string name="info">Info</string>
     <string name="about_gallery">About Gallery</string>
     <string name="two_line">Two line</string>
     <string name="three_line">Three line</string>
     <string name="four_line">Four line</string>
     <string name="list_of_favorite_wallpapers_is_empty">List of favorite wallpapers is empty</string>
+    <string name="blue">Blue</string>
+    <string name="orange">Orange</string>
+    <string name="purple">Purple</string>
+    <string name="red">Red</string>
+    <string name="yellow">Yellow</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="failed_to_delete_from_favorites">Failed to delete from favorites</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="error_adding_to_favorites">Error adding to favorites</string>
 
 </resources>

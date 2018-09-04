@@ -10,28 +10,35 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,8 +59,8 @@ import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
 
 public class DetailActivity extends MvpAppCompatActivity implements DetailViewContract {
 
-    private static final boolean AUTO_HIDE = true;
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    //    private static final boolean AUTO_HIDE = true;
+//    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private static final String DATE_FORMAT = "ddMMyyyy_HHmmss";
     private static final String SHARE_TYPE = "text/html";
@@ -63,10 +70,14 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     private FavoriteWallpaper favoriteWallpaper;
     private Toast toast;
     private boolean isInBookmarks;
+    private boolean isLandscape;
 
+    @BindView(R.id.detail_progress_bar)
+    ProgressBar detailProgressBar;
     @InjectPresenter
     DetailPresenter presenter;
-
+    @BindView(R.id.detail_head_frame_layout)
+    FrameLayout detailHeadFrameLayout;
     @BindView(R.id.button_bookmark)
     ImageView buttonBookmark;
     @BindView(R.id.button_share)
@@ -89,6 +100,8 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     View upperLinearLayout;
     @BindView(R.id.bottom_linear_layout)
     View bottomLinearLayout;
+    @BindView(R.id.button_orientation)
+    ImageView buttonOrientation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +128,8 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         } else {
             authorTextView.setText(favoriteWallpaper.getAuthor());
         }
-        Glide.with(this).load(favoriteWallpaper.getUrl()).into(detailImage);
+        //Glide.with(this).load(favoriteWallpaper.getUrl()).into(detailImage);
+        showWallpaper(favoriteWallpaper.getPortraitUrl());
     }
 
     private final Runnable mHidePart2Runnable = new Runnable() {
@@ -146,15 +160,15 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         }
     };
 
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+//    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+//        @Override
+//        public boolean onTouch(View view, MotionEvent motionEvent) {
+//            if (AUTO_HIDE) {
+//                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+//            }
+//            return false;
+//        }
+//    };
 
     public static void startDetailActivity(FavoriteWallpaper favoriteWallpaper) {
         Context context = App.getInstance().getContext();
@@ -173,8 +187,8 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image,
-            R.id.button_full_screen, R.id.button_download, R.id.button_share, R.id.button_bookmark})
+    @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image, R.id.button_full_screen,
+            R.id.button_download, R.id.button_share, R.id.button_bookmark, R.id.button_orientation})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.button_back:
@@ -199,6 +213,17 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
                 break;
             case R.id.button_bookmark:
                 addOrRemoveBookmark(favoriteWallpaper);
+                break;
+            case R.id.button_orientation:
+                if (!isLandscape) {
+                    buttonOrientation.setImageResource(R.drawable.portrait);
+                    isLandscape = true;
+                    showWallpaper(favoriteWallpaper.getLandscapeUrl());
+                } else {
+                    buttonOrientation.setImageResource(R.drawable.landscape);
+                    isLandscape = false;
+                    showWallpaper(favoriteWallpaper.getPortraitUrl());
+                }
                 break;
         }
     }
@@ -353,7 +378,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         Intent intentShare = new Intent(Intent.ACTION_SEND);
         intentShare.setType(SHARE_TYPE);
         intentShare.putExtra(Intent.EXTRA_TEXT,
-                (getString(R.string.photos_provided_by_pexels) + " ") + favoriteWallpaper.getUrl());
+                (getString(R.string.photos_provided_by_pexels) + " ") + favoriteWallpaper.getLandscapeUrl());
         Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
         if (intentShare.resolveActivity(getPackageManager()) != null) {
             startActivity(chooser);
@@ -366,6 +391,23 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         } else {
             presenter.deleteBookmark(favorite);
         }
+    }
+
+    private void showWallpaper(String url) {
+        detailProgressBar.setVisibility(View.VISIBLE);
+        Glide.with(this).load(url).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                detailHeadFrameLayout.setVisibility(View.VISIBLE);
+                detailProgressBar.setVisibility(View.GONE);
+                return false;
+            }
+        }).into(detailImage);
     }
 
     @Override
