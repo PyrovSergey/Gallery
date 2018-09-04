@@ -32,4 +32,7 @@ public interface DetailViewContract extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void setWallpaper();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showNoConnectionDialogMessage();
 }

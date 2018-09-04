@@ -101,4 +101,5 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     public void showTextEmptyList() {
         textViewEmpty.setVisibility(View.VISIBLE);
     }
+
 }

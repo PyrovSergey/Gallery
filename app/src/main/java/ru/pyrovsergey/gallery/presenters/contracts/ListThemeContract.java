@@ -7,5 +7,4 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 public interface ListThemeContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void onShowMessage(String message);
-
 }

@@ -52,6 +52,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.presenters.DetailPresenter;
@@ -59,8 +60,6 @@ import ru.pyrovsergey.gallery.presenters.contracts.DetailViewContract;
 
 public class DetailActivity extends MvpAppCompatActivity implements DetailViewContract {
 
-    //    private static final boolean AUTO_HIDE = true;
-//    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private static final String DATE_FORMAT = "ddMMyyyy_HHmmss";
     private static final String SHARE_TYPE = "text/html";
@@ -160,16 +159,6 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         }
     };
 
-//    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-//        @Override
-//        public boolean onTouch(View view, MotionEvent motionEvent) {
-//            if (AUTO_HIDE) {
-//                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-//            }
-//            return false;
-//        }
-//    };
-
     public static void startDetailActivity(FavoriteWallpaper favoriteWallpaper) {
         Context context = App.getInstance().getContext();
         Intent intent = new Intent(context, DetailActivity.class);
@@ -198,9 +187,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
                 presenter.onClickSetWallpaper();
                 break;
             case R.id.detail_image:
-                if (!mVisible) {
-                    show();
-                }
+                show();
                 break;
             case R.id.button_full_screen:
                 toggle();
@@ -215,16 +202,24 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
                 addOrRemoveBookmark(favoriteWallpaper);
                 break;
             case R.id.button_orientation:
-                if (!isLandscape) {
-                    buttonOrientation.setImageResource(R.drawable.portrait);
-                    isLandscape = true;
-                    showWallpaper(favoriteWallpaper.getLandscapeUrl());
-                } else {
-                    buttonOrientation.setImageResource(R.drawable.landscape);
-                    isLandscape = false;
-                    showWallpaper(favoriteWallpaper.getPortraitUrl());
-                }
+                getLandscapeOrPortraitWallpaper();
                 break;
+        }
+    }
+
+    private void getLandscapeOrPortraitWallpaper() {
+        if (App.isInternetAvailable()) {
+            if (!isLandscape) {
+                buttonOrientation.setImageResource(R.drawable.portrait);
+                isLandscape = true;
+                showWallpaper(favoriteWallpaper.getLandscapeUrl());
+            } else {
+                buttonOrientation.setImageResource(R.drawable.landscape);
+                isLandscape = false;
+                showWallpaper(favoriteWallpaper.getPortraitUrl());
+            }
+        } else {
+            presenter.noInternetConnection();
         }
     }
 
@@ -284,13 +279,15 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        detailImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mVisible = true;
+        if (!mVisible) {
+            detailImage.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            mVisible = true;
 
-        // Schedule a runnable to display UI elements after a delay
-        mHideHandler.removeCallbacks(mHidePart2Runnable);
-        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+            // Schedule a runnable to display UI elements after a delay
+            mHideHandler.removeCallbacks(mHidePart2Runnable);
+            mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+        }
     }
 
     private void hide() {
@@ -375,13 +372,17 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
 
     @Override
     public void share() {
-        Intent intentShare = new Intent(Intent.ACTION_SEND);
-        intentShare.setType(SHARE_TYPE);
-        intentShare.putExtra(Intent.EXTRA_TEXT,
-                (getString(R.string.photos_provided_by_pexels) + " ") + favoriteWallpaper.getLandscapeUrl());
-        Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
-        if (intentShare.resolveActivity(getPackageManager()) != null) {
-            startActivity(chooser);
+        if (App.isInternetAvailable()) {
+            Intent intentShare = new Intent(Intent.ACTION_SEND);
+            intentShare.setType(SHARE_TYPE);
+            intentShare.putExtra(Intent.EXTRA_TEXT,
+                    (getString(R.string.photos_provided_by_pexels) + " ") + favoriteWallpaper.getLandscapeUrl());
+            Intent chooser = Intent.createChooser(intentShare, getString(R.string.look_at_that));
+            if (intentShare.resolveActivity(getPackageManager()) != null) {
+                startActivity(chooser);
+            }
+        } else {
+            presenter.noInternetConnection();
         }
     }
 
@@ -448,6 +449,12 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
                 Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
+    }
+
+    @Override
+    public void showNoConnectionDialogMessage() {
+        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
     }
 
     @Override

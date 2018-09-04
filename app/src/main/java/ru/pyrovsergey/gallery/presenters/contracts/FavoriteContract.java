@@ -8,7 +8,8 @@ public interface FavoriteContract extends MvpView {
     @StateStrategyType(AddToEndSingleStrategy.class)
     void adapterNotifyDataSetChanged();
 
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void hideTextEmptyList();
-
+    @StateStrategyType(AddToEndSingleStrategy.class)
     void showTextEmptyList();
 }

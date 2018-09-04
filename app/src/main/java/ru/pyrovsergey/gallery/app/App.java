@@ -3,6 +3,7 @@ package ru.pyrovsergey.gallery.app;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -27,7 +28,7 @@ public class App extends Application {
     private final static String BASE_URL = "https://api.pexels.com";
     private final static String KEY = "";
     private static AppGalleryDatabase database;
-    private Context context;
+    private static Context context;
 
     @Override
     public void onCreate() {
@@ -40,6 +41,14 @@ public class App extends Application {
         okHttpClient = getOkHttpClient();
         retrofit = getRetrofitClient(BASE_URL, okHttpClient);
         api = retrofit.create(PexelsApi.class);
+    }
+
+    public static boolean isInternetAvailable() {
+        ConnectivityManager mConMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return mConMgr != null
+                && mConMgr.getActiveNetworkInfo() != null
+                && mConMgr.getActiveNetworkInfo().isAvailable()
+                && mConMgr.getActiveNetworkInfo().isConnected();
     }
 
     private OkHttpClient getOkHttpClient() {
@@ -61,7 +70,7 @@ public class App extends Application {
     private static Retrofit getRetrofitClient(String baseUrl, OkHttpClient okHttpClient) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                        .baseUrl(baseUrl)
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(okHttpClient)
                     .build();

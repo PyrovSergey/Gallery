@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import ru.pyrovsergey.gallery.DetailActivity;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
@@ -42,14 +44,19 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailActivity.startDetailActivity(favoriteWallpaper);
+                if (App.isInternetAvailable()) {
+                    DetailActivity.startDetailActivity(favoriteWallpaper);
+                } else {
+                    Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                            "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+                }
             }
         });
         setLeftAnimation(holder.cardView);
     }
 
     private void setLeftAnimation(CardView cardView) {
-        Animation animation = AnimationUtils.loadAnimation(App.getInstance().getContext(), android.R.anim.slide_in_left);
+        Animation animation = AnimationUtils.loadAnimation(cardView.getContext(), android.R.anim.slide_in_left);
         cardView.startAnimation(animation);
     }
 

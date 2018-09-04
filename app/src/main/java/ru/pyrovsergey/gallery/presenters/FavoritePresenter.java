@@ -8,8 +8,8 @@ import java.util.List;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
 import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
-import ru.pyrovsergey.gallery.presenters.listeners.FavoriteListener;
 import ru.pyrovsergey.gallery.presenters.contracts.FavoriteContract;
+import ru.pyrovsergey.gallery.presenters.listeners.FavoriteListener;
 
 @InjectViewState
 public class FavoritePresenter extends MvpPresenter<FavoriteContract> implements FavoriteListener {
@@ -29,7 +29,7 @@ public class FavoritePresenter extends MvpPresenter<FavoriteContract> implements
         return list;
     }
 
-    public void requestFavoriteList(){
+    public void requestFavoriteList() {
         dataStorage.requestFavoriteList(this);
     }
 

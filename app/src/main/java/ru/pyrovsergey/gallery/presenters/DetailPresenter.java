@@ -50,6 +50,10 @@ public class DetailPresenter extends MvpPresenter<DetailViewContract> implements
         getViewState().checkStoragePermissionGrantedAndDownload();
     }
 
+    public void noInternetConnection() {
+        getViewState().showNoConnectionDialogMessage();
+    }
+
     @Override
     public void positiveResultCheckIsAddToBookmarks() {
         getViewState().positiveResultCheckIsAddToBookmarks();

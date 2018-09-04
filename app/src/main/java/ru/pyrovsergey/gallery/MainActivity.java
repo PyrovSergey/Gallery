@@ -27,12 +27,14 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.fragments.FavoriteFragment;
 import ru.pyrovsergey.gallery.fragments.ListOfSelectedTopicsFragment;
@@ -85,9 +87,20 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        if (!App.isInternetAvailable()) {
+            headPresenter.noInternetConnection();
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().findFragmentByTag("ListOfSelectedTopics") != null) {
             startOrReplaceListThemeFragment();
+            if (!App.isInternetAvailable()) {
+                headPresenter.noInternetConnection();
+            }
 
         } else if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -197,24 +210,35 @@ public class MainActivity extends MvpAppCompatActivity
         ListThemeFragment fragment = App.getComponent().getListThemeFragment();
         ft.replace(R.id.frame, fragment, "ListThemeFragment");
         ft.commitAllowingStateLoss();
+        if (!App.isInternetAvailable()) {
+            headPresenter.noInternetConnection();
+        }
     }
 
     private void startOrReplaceFragmentListOfSelectedTopics(String query) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
-        ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
-        ft.commitAllowingStateLoss();
-        if (toolbarTitle != null && !TextUtils.isEmpty(query)) {
-            toolbarTitle.setText(query);
+        if (App.isInternetAvailable()) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
+            ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
+            ft.commitAllowingStateLoss();
+            if (toolbarTitle != null && !TextUtils.isEmpty(query)) {
+                toolbarTitle.setText(query);
+            }
+        } else {
+            headPresenter.noInternetConnection();
         }
     }
 
     private void startOrReplaceFavoriteFragment() {
-        toolbarTitle.setText(R.string.my_favorite_wallpapers);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        FavoriteFragment fragment = FavoriteFragment.getInstance();
-        ft.replace(R.id.frame, fragment, "FavoriteFragment");
-        ft.commitAllowingStateLoss();
+        if (App.isInternetAvailable()) {
+            toolbarTitle.setText(R.string.my_favorite_wallpapers);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FavoriteFragment fragment = FavoriteFragment.getInstance();
+            ft.replace(R.id.frame, fragment, "FavoriteFragment");
+            ft.commitAllowingStateLoss();
+        } else {
+            headPresenter.noInternetConnection();
+        }
     }
 
     private void showAboutMessage() {
@@ -242,5 +266,11 @@ public class MainActivity extends MvpAppCompatActivity
                     })
                     .show();
         }
+    }
+
+    @Override
+    public void showNoConnectionDialogMessage() {
+        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
     }
 }

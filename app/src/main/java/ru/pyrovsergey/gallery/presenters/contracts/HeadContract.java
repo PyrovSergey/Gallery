@@ -11,4 +11,7 @@ public interface HeadContract extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void showAboutGalleryMessage();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showNoConnectionDialogMessage();
 }

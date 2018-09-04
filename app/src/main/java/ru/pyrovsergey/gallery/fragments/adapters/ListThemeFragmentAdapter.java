@@ -10,9 +10,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
@@ -42,7 +44,12 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapterListener.onClickListener(wallpaper.getTitle());
+                if (App.isInternetAvailable()) {
+                    adapterListener.onClickListener(wallpaper.getTitle());
+                } else {
+                    Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                            "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+                }
             }
         });
         setLeftAnimation(holder.cardView);
@@ -50,7 +57,7 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
 
 
     private void setLeftAnimation(CardView cardView) {
-        Animation animation = AnimationUtils.loadAnimation(App.getInstance().getContext(), android.R.anim.slide_in_left);
+        Animation animation = AnimationUtils.loadAnimation(cardView.getContext(), android.R.anim.slide_in_left);
         cardView.startAnimation(animation);
     }
 
@@ -73,4 +80,5 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
             textView = view.findViewById(R.id.list_theme_title_text_view);
         }
     }
+
 }

@@ -13,15 +13,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
+import es.dmoral.toasty.Toasty;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.fragments.adapters.ListOfSelectedTopicsAdapter;
-import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
 import ru.pyrovsergey.gallery.presenters.ListOfSelectedTopicsFragmentPresenter;
+import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
 
 public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
         implements ListOfSelectedTopicsContract, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -100,6 +102,9 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
     public void onErrorLoadOfLastPage() {
         hideProgressBar();
         isLastPage = true;
+        if (!App.isInternetAvailable()) {
+            showNoConnectionDialogMessage();
+        }
     }
 
     private void showProgressBar() {
@@ -141,5 +146,10 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
+    }
+
+    private void showNoConnectionDialogMessage() {
+        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
     }
 }

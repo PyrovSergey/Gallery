@@ -22,4 +22,8 @@ public class HeadPresenter extends MvpPresenter<HeadContract> {
     public void callAboutGallery() {
         getViewState().showAboutGalleryMessage();
     }
+
+    public void noInternetConnection() {
+        getViewState().showNoConnectionDialogMessage();
+    }
 }
