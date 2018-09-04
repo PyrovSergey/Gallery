@@ -22,7 +22,6 @@ import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -30,7 +29,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -67,7 +65,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     private final Handler mHideHandler = new Handler();
 
     private FavoriteWallpaper favoriteWallpaper;
-    private Toast toast;
+    private Toasty toast;
     private boolean isInBookmarks;
     private boolean isLandscape;
 
@@ -261,7 +259,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         try {
             wallpaperManager.setBitmap(bitmap);
             wallpaperManager.suggestDesiredDimensions(width, height);
-            makeToast(getString(R.string.wallpapers_changed));
+            makeSuccessToast(getString(R.string.wallpapers_changed));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -325,7 +323,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
             Log.d("MyTAG", "onRequestPermissionsResult() - Permission: " + permissions[0] + " was " + grantResults[0]);
             presenter.onClickDownloadWallpaper();
         } else {
-            makeToast(getString(R.string.message_to_obtain_permission));
+            makeInfoToast(getString(R.string.message_to_obtain_permission));
         }
     }
 
@@ -358,7 +356,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
             }
             // Add the image to the system gallery
             galleryAddPic(savedImagePath);
-            makeToast(getString(R.string.image_saved));
+            makeSuccessToast(getString(R.string.image_saved));
         }
     }
 
@@ -436,32 +434,30 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     }
 
     @Override
-    public void showToastMessage(String message) {
-        makeToast(message);
+    public void showSuccessToastMessage(String message) {
+        makeSuccessToast(message);
     }
 
-    private void makeToast(String message) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getApplicationContext(),
-                message,
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+    @Override
+    public void showErrorToastMessage(String message) {
+        makeErrorToast(message);
+    }
+
+    private void makeErrorToast(String message) {
+        Toasty.error(this, message, 0, true).show();
+    }
+
+    private void makeSuccessToast(String message) {
+        Toasty.success(this, message, 0, true).show();
+    }
+
+    private void makeInfoToast(String message) {
+        Toasty.info(this, message, 0, true).show();
     }
 
     @Override
     public void showNoConnectionDialogMessage() {
-        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
-                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (toast != null) {
-            toast.cancel();
-        }
+        Toasty.error(this, App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
     }
 }

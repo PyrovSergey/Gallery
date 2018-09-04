@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,8 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter.requestFavoriteList();
+        log("onCreate");
     }
 
     public static FavoriteFragment getInstance() {
@@ -60,6 +64,7 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
         recyclerView.setLayoutManager(layoutManager);
         adapter = new FavoriteAdapter(presenter.getFavoriteWallpapersList());
         recyclerView.setAdapter(adapter);
+        adapter.clear();
         return view;
     }
 
@@ -67,11 +72,13 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
     public void onResume() {
         super.onResume();
         presenter.requestFavoriteList();
+        log("onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        log("onPause");
     }
 
     @Override
@@ -83,7 +90,6 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
         recyclerView.setLayoutManager(layoutManager);
         adapter = new FavoriteAdapter(presenter.getFavoriteWallpapersList());
-        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -102,4 +108,31 @@ public class FavoriteFragment extends MvpAppCompatFragment implements FavoriteCo
         textViewEmpty.setVisibility(View.VISIBLE);
     }
 
+    private void log(String s) {
+        Log.i("MyTAG", s);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        log("onAttachFragment");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        log("onAttach");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        log("onDestroy");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        log("onDestroy");
+    }
 }

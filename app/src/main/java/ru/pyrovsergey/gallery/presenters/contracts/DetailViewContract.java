@@ -7,7 +7,10 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface DetailViewContract extends MvpView {
     @StateStrategyType(SkipStrategy.class)
-    void showToastMessage(String message);
+    void showSuccessToastMessage(String message);
+
+    @StateStrategyType(SkipStrategy.class)
+    void showErrorToastMessage(String message);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void positiveResultCheckIsAddToBookmarks();

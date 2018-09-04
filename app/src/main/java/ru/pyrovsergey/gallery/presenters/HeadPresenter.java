@@ -9,11 +9,6 @@ import ru.pyrovsergey.gallery.presenters.contracts.HeadContract;
 
 @InjectViewState
 public class HeadPresenter extends MvpPresenter<HeadContract> {
-    private DataStorageContract dataStorage;
-
-    public HeadPresenter() {
-        dataStorage = App.getComponent().getDataStorage();
-    }
 
     public void searchWallpapers(String query) {
         getViewState().startListOfSelectedTopicsFragment(query);

@@ -17,6 +17,7 @@
     <string name="beauty">Beauty</string>
     <string name="black_and_white">Black And White</string>
     <string name="blur">Blur</string>
+    <string name="blue">Blue</string>
     <string name="books">Books</string>
     <string name="building">Building</string>
     <string name="business">Business</string>
@@ -100,6 +101,7 @@
     <string name="notebook">Notebook</string>
     <string name="office">Office</string>
     <string name="old">Old</string>
+    <string name="orange">Orange</string>
     <string name="paint">Paint</string>
     <string name="paper">Paper</string>
     <string name="party">Party</string>
@@ -109,8 +111,10 @@
     <string name="photography">Photography</string>
     <string name="plane">Plane</string>
     <string name="portrait">Portrait</string>
+    <string name="purple">Purple</string>
     <string name="rain">Rain</string>
     <string name="reading">Reading</string>
+    <string name="red">Red</string>
     <string name="relax">Relax</string>
     <string name="river">River</string>
     <string name="road">Road</string>
@@ -156,6 +160,7 @@
     <string name="work">Work</string>
     <string name="working">Working</string>
     <string name="writing">Writing</string>
+    <string name="yellow">Yellow</string>
     <string name="yoga">Yoga</string>
     <string name="young">Young</string>
 
@@ -180,11 +185,6 @@
     <string name="three_line">Three line</string>
     <string name="four_line">Four line</string>
     <string name="list_of_favorite_wallpapers_is_empty">List of favorite wallpapers is empty</string>
-    <string name="blue">Blue</string>
-    <string name="orange">Orange</string>
-    <string name="purple">Purple</string>
-    <string name="red">Red</string>
-    <string name="yellow">Yellow</string>
     <string name="removed_from_favorites">Removed from favorites</string>
     <string name="failed_to_delete_from_favorites">Failed to delete from favorites</string>
     <string name="added_to_favorites">Added to favorites</string>

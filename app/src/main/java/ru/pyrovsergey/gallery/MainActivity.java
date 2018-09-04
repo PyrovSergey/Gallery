@@ -27,7 +27,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -146,7 +145,6 @@ public class MainActivity extends MvpAppCompatActivity
         searchView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
-                //Toast.makeText(App.getInstance().getContext(), String.valueOf(visibility), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -270,7 +268,7 @@ public class MainActivity extends MvpAppCompatActivity
 
     @Override
     public void showNoConnectionDialogMessage() {
-        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
-                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+        Toasty.error(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
     }
 }

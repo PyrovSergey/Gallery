@@ -37,8 +37,4 @@ public class FavoritePresenter extends MvpPresenter<FavoriteContract> implements
     public void onSuccess() {
         getViewState().adapterNotifyDataSetChanged();
     }
-
-    public void update() {
-        getViewState().adapterNotifyDataSetChanged();
-    }
 }

@@ -65,11 +65,6 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     }
 
     @Override
-    public void onShowMessage(String message) {
-        Toast.makeText(App.getInstance().getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onClickListener(String query) {
         startListOfSelectedTopicsAdapter(query);
     }

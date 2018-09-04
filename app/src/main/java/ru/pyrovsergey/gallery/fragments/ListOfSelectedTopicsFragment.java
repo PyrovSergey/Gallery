@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -149,7 +148,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
     }
 
     private void showNoConnectionDialogMessage() {
-        Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
-                "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+        Toasty.error(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
     }
 }

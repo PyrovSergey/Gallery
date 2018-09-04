@@ -62,22 +62,22 @@ public class DetailPresenter extends MvpPresenter<DetailViewContract> implements
     @Override
     public void onSuccessDeleteBookmark() {
         getViewState().onSuccessDeleteBookmark();
-        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.removed_from_favorites));
+        getViewState().showSuccessToastMessage(App.getInstance().getContext().getString(R.string.removed_from_favorites));
     }
 
     @Override
     public void onErrorDeleteBookmark() {
-        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.failed_to_delete_from_favorites));
+        getViewState().showErrorToastMessage(App.getInstance().getContext().getString(R.string.failed_to_delete_from_favorites));
     }
 
     @Override
     public void onSuccessInsertBookmark() {
         getViewState().onSuccessInsertBookmark();
-        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.added_to_favorites));
+        getViewState().showSuccessToastMessage(App.getInstance().getContext().getString(R.string.added_to_favorites));
     }
 
     @Override
     public void onErrorInsertBookmark() {
-        getViewState().showToastMessage(App.getInstance().getContext().getString(R.string.error_adding_to_favorites));
+        getViewState().showErrorToastMessage(App.getInstance().getContext().getString(R.string.error_adding_to_favorites));
     }
 }

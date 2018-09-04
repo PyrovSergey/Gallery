@@ -10,7 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -40,15 +39,15 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
     public void onBindViewHolder(@NonNull final ListThemeFragmentAdapter.ViewHolder holder, int position) {
         final ThemeWallpaper wallpaper = mainListWallpaper.get(position);
         holder.imageView.setImageResource(wallpaper.getImage());
-        holder.textView.setText(wallpaper.getTitle());
+        holder.textView.setText(wallpaper.getLocalTitle());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (App.isInternetAvailable()) {
                     adapterListener.onClickListener(wallpaper.getTitle());
                 } else {
-                    Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
-                            "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+                    Toasty.error(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                            "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
                 }
             }
         });

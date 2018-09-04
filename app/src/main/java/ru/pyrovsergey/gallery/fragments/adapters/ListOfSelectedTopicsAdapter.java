@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -54,8 +53,8 @@ public class ListOfSelectedTopicsAdapter extends RecyclerView.Adapter<ListOfSele
                     favoriteWallpaper.setSmallUrl(photosItem.getSrc().getSmall());
                     DetailActivity.startDetailActivity(favoriteWallpaper);
                 } else {
-                    Toasty.info(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
-                            "\n" + App.getInstance().getString(R.string.check_connection_settings), Toast.LENGTH_SHORT, true).show();
+                    Toasty.error(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
+                            "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
                 }
             }
         });
