@@ -15,24 +15,17 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import ru.pyrovsergey.gallery.R;
 import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.model.FavoriteWallpaper;
-import ru.pyrovsergey.gallery.model.PexelsApi;
-import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.ThemeWallpaper;
 import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
-import ru.pyrovsergey.gallery.model.dto.Response;
 import ru.pyrovsergey.gallery.presenters.listeners.DetailListener;
 import ru.pyrovsergey.gallery.presenters.listeners.FavoriteListener;
 
 public class DataStorage implements DataStorageContract {
 
-    private static final int PER_PAGE = 40;
-    private final PexelsApi pexelsApi;
     private List<ThemeWallpaper> themeWallpapers;
     private List<PhotosItem> photosItems;
     private List<FavoriteWallpaper> wallpaperList;
@@ -45,7 +38,126 @@ public class DataStorage implements DataStorageContract {
         initThemeWallpapersList();
         photosItems = new ArrayList<>();
         wallpaperList = new ArrayList<>();
-        pexelsApi = App.getApi();
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void isAddedToBookmarks(int id, final DetailListener listener) {
+        favoriteWallpaperDao.getById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FavoriteWallpaper>() {
+                    @Override
+                    public void accept(FavoriteWallpaper favorite) throws Exception {
+                        listener.positiveResultCheckIsAddToBookmarks();
+                    }
+                });
+    }
+
+    @Override
+    public void deleteBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.delete(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onSuccessDeleteBookmark();
+                        updateFavoriteList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onErrorDeleteBookmark();
+                    }
+                });
+    }
+
+    @Override
+    public void insertBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                favoriteWallpaperDao.insert(favorite);
+            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new CompletableObserver() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        listener.onSuccessInsertBookmark();
+                        updateFavoriteList();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onErrorInsertBookmark();
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void requestFavoriteList(final FavoriteListener listener) {
+        favoriteWallpaperDao.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<FavoriteWallpaper>>() {
+                    @Override
+                    public void accept(List<FavoriteWallpaper> employees) throws Exception {
+                        wallpaperList = employees;
+                        listener.onSuccess();
+                    }
+                });
+    }
+
+    @SuppressLint("CheckResult")
+    private void updateFavoriteList() {
+        favoriteWallpaperDao.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<FavoriteWallpaper>>() {
+                    @Override
+                    public void accept(List<FavoriteWallpaper> employees) throws Exception {
+                        wallpaperList = employees;
+                        Log.i("MyTAG", "Success updateFavoriteList()");
+                    }
+                });
+    }
+
+    @Override
+    public List<PhotosItem> getPhotosItems() {
+        return photosItems;
+    }
+
+    @Override
+    public void setPhotoItemList(List<PhotosItem> list) {
+        photosItems.clear();
+        photosItems = list;
+    }
+
+    @Override
+    public List<FavoriteWallpaper> getFavoriteWallpapersList() {
+        return wallpaperList;
+    }
+
+    @Override
+    public List<ThemeWallpaper> getMainListWallpapers() {
+        return themeWallpapers;
     }
 
     private void initThemeWallpapersList() {
@@ -837,141 +949,5 @@ public class DataStorage implements DataStorageContract {
         wallpaper156.setLocalTitle(resources.getString(R.string.young));
         wallpaper156.setImage(R.drawable.young);
         themeWallpapers.add(wallpaper156);
-
     }
-
-    @Override
-    public void searchWallpapersOnRequest(String query, final SearchPhotosCallback searchPhotosCallback, int numPage) {
-        pexelsApi.searchPhoto(query, PER_PAGE, numPage)
-                .enqueue(new Callback<Response>() {
-                    @Override
-                    public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                        if (response.body() != null) {
-                            photosItems.clear();
-                            photosItems = response.body().getPhotos();
-                        }
-                        searchPhotosCallback.onSuccessLoad();
-                    }
-
-                    @Override
-                    public void onFailure(Call<Response> call, Throwable t) {
-                        searchPhotosCallback.onErrorLoad(t);
-                    }
-                });
-    }
-
-    @SuppressLint("CheckResult")
-    @Override
-    public void isAddedToBookmarks(int id, final DetailListener listener) {
-        favoriteWallpaperDao.getById(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<FavoriteWallpaper>() {
-                    @Override
-                    public void accept(FavoriteWallpaper favorite) throws Exception {
-                        listener.positiveResultCheckIsAddToBookmarks();
-                    }
-                });
-    }
-
-    @Override
-    public void deleteBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                favoriteWallpaperDao.delete(favorite);
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        listener.onSuccessDeleteBookmark();
-                        updateFavoriteList();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onErrorDeleteBookmark();
-                    }
-                });
-    }
-
-    @Override
-    public void insertBookmark(final FavoriteWallpaper favorite, final DetailListener listener) {
-        Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                favoriteWallpaperDao.insert(favorite);
-            }
-        }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new CompletableObserver() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        listener.onSuccessInsertBookmark();
-                        updateFavoriteList();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onErrorInsertBookmark();
-                    }
-                });
-    }
-
-    @SuppressLint("CheckResult")
-    @Override
-    public void requestFavoriteList(final FavoriteListener listener) {
-        favoriteWallpaperDao.getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<FavoriteWallpaper>>() {
-                    @Override
-                    public void accept(List<FavoriteWallpaper> employees) throws Exception {
-                        wallpaperList = employees;
-                        listener.onSuccess();
-                    }
-                });
-    }
-
-    @SuppressLint("CheckResult")
-    private void updateFavoriteList() {
-        favoriteWallpaperDao.getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<FavoriteWallpaper>>() {
-                    @Override
-                    public void accept(List<FavoriteWallpaper> employees) throws Exception {
-                        wallpaperList = employees;
-                        Log.i("MyTAG", "Success updateFavoriteList()");
-                    }
-                });
-    }
-
-    @Override
-    public List<PhotosItem> getPhotosItems() {
-        return photosItems;
-    }
-
-    @Override
-    public List<FavoriteWallpaper> getFavoriteWallpapersList() {
-        return wallpaperList;
-    }
-
-    @Override
-    public List<ThemeWallpaper> getMainListWallpapers() {
-        return themeWallpapers;
-    }
-
 }

@@ -6,21 +6,24 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.List;
 
 import ru.pyrovsergey.gallery.app.App;
-import ru.pyrovsergey.gallery.model.SearchPhotosCallback;
 import ru.pyrovsergey.gallery.model.db.contracts.DataStorageContract;
 import ru.pyrovsergey.gallery.model.dto.PhotosItem;
+import ru.pyrovsergey.gallery.network.WallpapersNetworkData;
 import ru.pyrovsergey.gallery.presenters.contracts.ListOfSelectedTopicsContract;
+import ru.pyrovsergey.gallery.presenters.listeners.SearchPhotosListener;
 
 @InjectViewState
-public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSelectedTopicsContract> implements SearchPhotosCallback {
+public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSelectedTopicsContract> implements SearchPhotosListener {
     private DataStorageContract dataStorage;
+    private WallpapersNetworkData networkData;
 
     public ListOfSelectedTopicsFragmentPresenter() {
         dataStorage = App.getComponent().getDataStorage();
+        networkData = App.getComponent().getWallpapersNetworkData();
     }
 
     public void searchWallpapers(String query, int numberPage) {
-        dataStorage.searchWallpapersOnRequest(query, this, numberPage);
+        networkData.searchWallpapersOnRequest(query, this, numberPage);
     }
 
     public List<PhotosItem> getPhotosItemList() {
@@ -28,7 +31,8 @@ public class ListOfSelectedTopicsFragmentPresenter extends MvpPresenter<ListOfSe
     }
 
     @Override
-    public void onSuccessLoad() {
+    public void onSuccessLoad(List<PhotosItem> list) {
+        dataStorage.setPhotoItemList(list);
         getViewState().adapterNotifyDataSetChanged();
     }
 

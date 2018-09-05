@@ -152,7 +152,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
     private void uploadAdapterAndLayoutManager() {
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ListOfSelectedTopicsAdapter(presenter.getPhotosItemList());
     }
 
     private void showNoConnectionDialogMessage() {

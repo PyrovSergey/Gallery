@@ -1,4 +1,4 @@
-package ru.pyrovsergey.gallery.model;
+package ru.pyrovsergey.gallery.network;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
