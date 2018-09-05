@@ -219,9 +219,6 @@ public class MainActivity extends MvpAppCompatActivity
             ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
             ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
             ft.commitAllowingStateLoss();
-            if (toolbarTitle != null && !TextUtils.isEmpty(query)) {
-                toolbarTitle.setText(query);
-            }
         } else {
             headPresenter.noInternetConnection();
         }

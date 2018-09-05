@@ -13,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 
 import ru.pyrovsergey.gallery.MainActivity;
 import ru.pyrovsergey.gallery.R;
-import ru.pyrovsergey.gallery.app.App;
 import ru.pyrovsergey.gallery.fragments.adapters.ListThemeFragmentAdapter;
 import ru.pyrovsergey.gallery.presenters.ListThemeFragmentPresenter;
 import ru.pyrovsergey.gallery.presenters.contracts.ListThemeContract;
@@ -59,24 +57,25 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_main_list, container, false);
         toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         recyclerView.setHasFixedSize(true);
+        adapter = new ListThemeFragmentAdapter(presenter.getMainListWallpaper());
         uploadAdapterAndLayoutManager();
         recyclerView.setAdapter(adapter);
         return recyclerView;
     }
 
     @Override
-    public void onClickListener(String query) {
-        startListOfSelectedTopicsAdapter(query);
+    public void onClickListener(String query, String title) {
+        startListOfSelectedTopicsAdapter(query, title);
     }
 
 
-    private void startListOfSelectedTopicsAdapter(String query) {
+    private void startListOfSelectedTopicsAdapter(String query, String title) {
         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
         ListOfSelectedTopicsFragment fragment = ListOfSelectedTopicsFragment.getInstance(query);
         ft.replace(R.id.frame, fragment, "ListOfSelectedTopics");
         ft.commitAllowingStateLoss();
-        if (toolbarTitle != null && !TextUtils.isEmpty(query)) {
-            toolbarTitle.setText(query);
+        if (toolbarTitle != null && !TextUtils.isEmpty(title)) {
+            toolbarTitle.setText(title);
         }
     }
 
@@ -88,6 +87,5 @@ public class ListThemeFragment extends MvpAppCompatFragment implements ListTheme
     private void uploadAdapterAndLayoutManager() {
         layoutManager = new StaggeredGridLayoutManager(preferences.getInt(SETTING_GALLERY_LAYOUT, 2), StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new ListThemeFragmentAdapter(presenter.getMainListWallpaper());
     }
 }

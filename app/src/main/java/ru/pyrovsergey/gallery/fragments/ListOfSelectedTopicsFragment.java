@@ -31,7 +31,6 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
 
     @InjectPresenter
     ListOfSelectedTopicsFragmentPresenter presenter;
-
     private ProgressBar paginationProgressBar;
     private ProgressBar progressBar;
     private TextView textViewEmpty;
@@ -44,6 +43,7 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
     private int pageCount = 1;
     private boolean isLastPage = false;
     private static boolean isFirstStart = true;
+    private int itemCount = 0;
 
     public static ListOfSelectedTopicsFragment getInstance(String query) {
         ListOfSelectedTopicsFragment fragment = new ListOfSelectedTopicsFragment();
@@ -74,6 +74,8 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
         progressBar.setVisibility(View.VISIBLE);
         preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         preferences.registerOnSharedPreferenceChangeListener(this);
+        textViewEmpty = view.findViewById(R.id.choice_list_text);
+        textViewEmpty.setText(R.string.nothing_found);
         recyclerView = view.findViewById(R.id.choice_list_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(App.getInstance().getContext(), preferences.getInt(SETTING_GALLERY_LAYOUT, 2));
@@ -139,6 +141,12 @@ public class ListOfSelectedTopicsFragment extends MvpAppCompatFragment
         isFirstStart = false;
         loading = false;
         adapter.updateDataAdapter(presenter.getPhotosItemList());
+        itemCount = +adapter.getItemCount();
+        if (itemCount == 0) {
+            textViewEmpty.setVisibility(View.VISIBLE);
+        } else {
+            textViewEmpty.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void uploadAdapterAndLayoutManager() {

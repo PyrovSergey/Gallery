@@ -63,12 +63,12 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     private static final String SHARE_TYPE = "text/html";
     public static final String KEY_FAVORITE_WALLPAPER_OBJECT = "ru.pyrovsergey.gallery_key_favorite_wallpaper_object";
     private final Handler mHideHandler = new Handler();
-
     private FavoriteWallpaper favoriteWallpaper;
-    private Toasty toast;
     private boolean isInBookmarks;
     private boolean isLandscape;
 
+    @BindView(R.id.detail_main_frame_layout)
+    FrameLayout detailMainFrameLayout;
     @BindView(R.id.detail_progress_bar)
     ProgressBar detailProgressBar;
     @InjectPresenter
@@ -117,7 +117,6 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         Intent intent = getIntent();
         favoriteWallpaper = intent.getParcelableExtra(KEY_FAVORITE_WALLPAPER_OBJECT);
 
-        //isAddedToBookmarks(favoriteWallpaper.getId());
         presenter.isAddToBookmarks(favoriteWallpaper.getId());
 
         if (TextUtils.isEmpty(favoriteWallpaper.getAuthor())) {
@@ -125,7 +124,6 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         } else {
             authorTextView.setText(favoriteWallpaper.getAuthor());
         }
-        //Glide.with(this).load(favoriteWallpaper.getUrl()).into(detailImage);
         showWallpaper(favoriteWallpaper.getPortraitUrl());
     }
 
@@ -163,15 +161,6 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(KEY_FAVORITE_WALLPAPER_OBJECT, favoriteWallpaper);
         context.startActivity(intent);
-    }
-
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
     @OnClick({R.id.button_back, R.id.button_set_as_wallpaper, R.id.detail_image, R.id.button_full_screen,
@@ -393,6 +382,8 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
     }
 
     private void showWallpaper(String url) {
+        detailImage.setVisibility(View.INVISIBLE);
+        detailMainFrameLayout.setBackgroundColor(getResources().getColor(R.color.colorBlack));
         detailProgressBar.setVisibility(View.VISIBLE);
         Glide.with(this).load(url).listener(new RequestListener<Drawable>() {
             @Override
@@ -402,6 +393,7 @@ public class DetailActivity extends MvpAppCompatActivity implements DetailViewCo
 
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                detailImage.setVisibility(View.VISIBLE);
                 detailHeadFrameLayout.setVisibility(View.VISIBLE);
                 detailProgressBar.setVisibility(View.GONE);
                 return false;

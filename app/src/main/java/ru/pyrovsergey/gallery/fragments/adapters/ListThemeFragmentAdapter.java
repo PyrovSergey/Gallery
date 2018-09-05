@@ -44,7 +44,7 @@ public class ListThemeFragmentAdapter extends RecyclerView.Adapter<ListThemeFrag
             @Override
             public void onClick(View v) {
                 if (App.isInternetAvailable()) {
-                    adapterListener.onClickListener(wallpaper.getTitle());
+                    adapterListener.onClickListener(wallpaper.getTitle(), wallpaper.getLocalTitle());
                 } else {
                     Toasty.error(App.getInstance(), App.getInstance().getString(R.string.no_internet_connection) +
                             "\n" + App.getInstance().getString(R.string.check_connection_settings), 0, true).show();
