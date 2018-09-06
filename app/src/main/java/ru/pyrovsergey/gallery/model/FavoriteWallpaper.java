@@ -5,6 +5,13 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+@AllArgsConstructor
 @Entity(tableName = "favorite_wallpapers")
 public class FavoriteWallpaper implements Parcelable {
 
@@ -19,44 +26,7 @@ public class FavoriteWallpaper implements Parcelable {
 
     private String author;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getSmallUrl() {
-        return smallUrl;
-    }
-
-    public void setSmallUrl(String smallUrl) {
-        this.smallUrl = smallUrl;
-    }
-
-    public String getPortraitUrl() {
-        return portraitUrl;
-    }
-
-    public void setPortraitUrl(String portraitUrl) {
-        this.portraitUrl = portraitUrl;
-    }
-
-    public String getLandscapeUrl() {
-        return landscapeUrl;
-    }
-
-    public void setLandscapeUrl(String landscapeUrl) {
-        this.landscapeUrl = landscapeUrl;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public FavoriteWallpaper() {
     }
 
     @Override
@@ -71,9 +41,6 @@ public class FavoriteWallpaper implements Parcelable {
         dest.writeString(this.portraitUrl);
         dest.writeString(this.landscapeUrl);
         dest.writeString(this.author);
-    }
-
-    public FavoriteWallpaper() {
     }
 
     protected FavoriteWallpaper(Parcel in) {

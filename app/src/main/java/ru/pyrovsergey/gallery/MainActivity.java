@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -113,12 +114,12 @@ public class MainActivity extends MvpAppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setImeOptions(EditorInfo.IME_FLAG_FORCE_ASCII);
         ImageView searchCloseIcon = searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
         searchCloseIcon.setImageResource(R.drawable.ic_close_black_24dp);
         EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.colorBlack));
         searchEditText.setHintTextColor(getResources().getColor(R.color.black_overlay));
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         if (null != searchManager) {
@@ -181,11 +182,11 @@ public class MainActivity extends MvpAppCompatActivity
             case R.id.nav_gallery:
                 startOrReplaceListThemeFragment();
                 break;
-            case R.id.nav_about_gallery:
-                headPresenter.callAboutGallery();
-                break;
             case R.id.nav_my_favorite:
                 startOrReplaceFavoriteFragment();
+                break;
+            case R.id.nav_about_gallery:
+                headPresenter.callAboutGallery();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -203,6 +204,7 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     private void startOrReplaceListThemeFragment() {
+        navigationView.getMenu().getItem(0).setChecked(true);
         toolbarTitle.setText(R.string.app_name);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ListThemeFragment fragment = App.getComponent().getListThemeFragment();
@@ -225,6 +227,7 @@ public class MainActivity extends MvpAppCompatActivity
     }
 
     private void startOrReplaceFavoriteFragment() {
+        navigationView.getMenu().getItem(1).setChecked(true);
         if (App.isInternetAvailable()) {
             toolbarTitle.setText(R.string.my_favorite_wallpapers);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

@@ -172,7 +172,7 @@
     <string name="nothing_found">Ничего не найдено</string>
 
     <string name="alert_message_install_this_wallpaper">Установить эти обои?</string>
-    <string name="about_text">Это приложение было создано для моего портфолио. Приложение показывает фотографии с <a href="https://www.pexels.com/">pexels.com</a>. С его помощью вы можете свободно получать изображения с PEXELS. Полученные изображения можно установить в качестве обоев или загрузить их на телефон. Чтобы увидеть исходный код этого приложения, посетите мой репозиторий <a href="https://github.com/PyrovSergey/Gallery">github.com/PyrovSergey/Gallery</a></string>
+    <string name="about_text">Это приложение было создано для моего портфолио. Приложение показывает фотографии с <a href="https://www.pexels.com/">pexels.com</a>. С его помощью вы можете свободно получать изображения с PEXELS. Полученные изображения можно установить в качестве обоев или загрузить их на телефон. Поиск обоев осуществляется только на английском языке. По этой причине смена языка на клавиатуре заблокирована. Чтобы увидеть исходный код этого приложения, посетите мой репозиторий <a href="https://github.com/PyrovSergey/Gallery">github.com/PyrovSergey/Gallery</a></string>
     <string name="message_to_obtain_permission">Приложение должно получить разрешение на запись во внешнее хранилище</string>
     <string name="image_saved">Изображение сохранено</string>
     <string name="photos_provided_by_pexels">Фотографии предоставлены ресурсом Pexels</string>
