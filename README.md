@@ -1,7 +1,7 @@
 # Gallery
 Application for android allowing to find, view, download and install wallpapers
 
-<a href="https://play.google.com/store/apps/details?id=ru.pyrovsergey.flashlight">
+<a href="https://play.google.com/store/apps/details?id=ru.pyrovsergey.gallery">
   <img src="https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png" width="200"> 
 </a>
 
@@ -23,7 +23,7 @@ Application for android allowing to find, view, download and install wallpapers
 - Requires a key to work with Api pexels.com
 
 ### Demo
-<img src="https://image.ibb.co/iZaDMp/20180926_113630.gif" alt="20180926_113630" border="0">
+![](http://image.ibb.co/jZrynU/20180926_114042.gif)<img src="https://image.ibb.co/no3pu9/Screenshot_20180926_105752.jpg" width="200">
  
 ### Screenshots
 <img src="https://image.ibb.co/no3pu9/Screenshot_20180926_105752.jpg" width="200"><img 
