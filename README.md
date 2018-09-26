@@ -23,7 +23,7 @@ Application for android allowing to find, view, download and install wallpapers
 - Requires a key to work with Api pexels.com
 
 ### Demo
-![](http://image.ibb.co/jZrynU/20180926_114042.gif)<img src="https://image.ibb.co/no3pu9/Screenshot_20180926_105752.jpg" width="200">
+![](http://image.ibb.co/jZrynU/20180926_114042.gif)
  
 ### Screenshots
 <img src="https://image.ibb.co/no3pu9/Screenshot_20180926_105752.jpg" width="200"><img 
