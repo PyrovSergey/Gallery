@@ -27,6 +27,6 @@ Application for android allowing to find, view, download and install wallpapers
  
 ### Screenshots
 <img src="https://image.ibb.co/no3pu9/Screenshot_20180926_105752.jpg" width="200"><img 
-src="https://image.ibb.co/bBTNE9/Screenshot_20180926_105952.jpg" width="200"><img 
 src="https://image.ibb.co/ncFf1p/Screenshot_20180926_110017.jpg" width="200"><img 
+src="https://image.ibb.co/bBTNE9/Screenshot_20180926_105952.jpg" width="200"><img 
 src="https://image.ibb.co/hkoNE9/Screenshot_20180926_110110.jpg" width="200">
